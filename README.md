@@ -12,3 +12,10 @@
 ### 2： GMToolKit.Inspector.Sectionary<KeyT, ValueT>
 支持MonoBehaviour上可序列化的字典
 GMToolKit.Inspector.Sectionary<KeyT, ValueT>
+
+### N：后续
+这个库仅提供个人学习使用，主要是学习UnityEditor的内容
+
+后续或许还将尝试实现一个使用简单的TreeEditorWindow（有空的话）
+
+和EditorWindow（类似Odin）

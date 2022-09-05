@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -199,6 +199,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &705507995
@@ -213,7 +214,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -309,9 +310,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: InspectorSampleObject
       objectReference: {fileID: 0}
+    - target: {fileID: 7678436542431226254, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
+      propertyPath: sectionary.keyList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678436542431226254, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
+      propertyPath: sectionary.valueList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678436542431226254, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
+      propertyPath: sectionary.keyList.Array.data[1]
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678436542431226254, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
+      propertyPath: sectionary.valueList.Array.data[0]
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678436542431226254, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
+      propertyPath: sectionary.valueList.Array.data[1]
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 7678436542431226255, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7678436542431226255, guid: bfc1a257f78df6344b92229b74f0cda3, type: 3}
       propertyPath: m_LocalPosition.x

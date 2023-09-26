@@ -1,0 +1,18 @@
+{
+    "name": "GM.InspectorDrawer.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:54a8410ee1e80304ab1a7503c5cfc6aa"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

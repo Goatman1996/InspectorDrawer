@@ -1,4 +1,4 @@
-# InspectorDrawer 1.0.0
+# InspectorDrawer 0.0.1
 
 这是一个很简陋的 Inspector Drawer（仿Odin Inspector）
 
@@ -13,9 +13,3 @@
 支持MonoBehaviour上可序列化的字典
 GMToolKit.Inspector.Sectionary<KeyT, ValueT>
 
-### N：后续
-这个库仅提供个人学习使用，主要是学习UnityEditor的内容
-
-后续或许还将尝试实现一个使用简单的TreeEditorWindow（有空的话）
-
-和EditorWindow（类似Odin）

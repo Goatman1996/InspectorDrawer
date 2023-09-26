@@ -5,8 +5,6 @@ using System;
 
 namespace GMToolKit.Inspector
 {
-    public interface INeedDirty { }
-
     /// <summary>
     /// Serializable Dictionary
     /// </summary>

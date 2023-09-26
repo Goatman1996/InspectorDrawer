@@ -23,22 +23,8 @@ namespace GMToolKit.Inspector
 
         private void DrawSerializedProperty()
         {
-            SerializedObject m_SerializedObject = new SerializedObject(mono);
-            m_SerializedObject.Update();
-            SerializedProperty m_SerializedProperty = m_SerializedObject.GetIterator();
-
-            m_SerializedProperty.NextVisible(true);
-            GUI.enabled = false;
-            var rect = EditorGUILayout.GetControlRect();
-            EditorGUI.PropertyField(rect, m_SerializedProperty);
-            GUI.enabled = true;
-
-            while (m_SerializedProperty.NextVisible(false))
-            {
-                EditorGUILayout.PropertyField(m_SerializedProperty);
-            }
-
-            m_SerializedObject.ApplyModifiedProperties();
+            this.DrawDefaultInspector();
+            return;
         }
 
         private void DrawShowInInspector()

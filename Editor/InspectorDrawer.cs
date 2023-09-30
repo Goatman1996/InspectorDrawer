@@ -30,7 +30,7 @@ namespace GMToolKit.Inspector
         private void DrawShowInInspector()
         {
             var type = this.mono.GetType();
-            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var showEntity in showFieldList)
             {
                 var inspectAttr = showEntity.GetCustomAttribute<Inspect>();

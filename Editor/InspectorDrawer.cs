@@ -54,7 +54,7 @@ namespace GMToolKit.Inspector
                 }
             }
 
-            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic);
+            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var showEntity in showPropertyList)
             {
                 var inspectAttr = showEntity.GetCustomAttribute<Inspect>();

@@ -17,6 +17,9 @@ namespace GMToolKit.Inspector
 
             InspectorDrawer.DrawerLevel = 0;
 
+            InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
+            InspectorDrawerUtility.DrawLable("Draw By Inspecter Drawer", Color.cyan);
+            InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
             this.DrawShowInInspector();
             this.DrawButton();
         }
@@ -31,6 +34,7 @@ namespace GMToolKit.Inspector
         {
             var type = this.mono.GetType();
             var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var serializedObj = new SerializedObject(this.mono);
             foreach (var showEntity in showFieldList)
             {
                 var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
@@ -47,7 +51,7 @@ namespace GMToolKit.Inspector
                 {
                     showEntity.SetValue(this.mono, newValue);
 
-                    if (Application.isEditor)
+                    if (serializedObj.FindProperty(showEntity.Name) != null)
                     {
                         EditorUtility.SetDirty(this.mono);
                     }

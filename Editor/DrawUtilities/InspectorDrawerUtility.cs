@@ -28,6 +28,14 @@ namespace GMToolKit.Inspector
             GUI.color = colorTemp;
         }
 
+        public static void DrawLable(string content, Color color)
+        {
+            var colorTemp = GUI.color;
+            GUI.color = color;
+            GUILayout.Label(content);
+            GUI.color = colorTemp;
+        }
+
         public static object DrawField(string name, Type type, object oldValue, string paramCacheKey, out bool changed)
         {
             changed = false;

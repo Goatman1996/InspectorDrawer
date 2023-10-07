@@ -17,9 +17,13 @@ namespace GMToolKit.Inspector
 
             InspectorDrawer.DrawerLevel = 0;
 
-            InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
-            InspectorDrawerUtility.DrawLable("Draw By Inspecter Drawer", Color.cyan);
-            InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
+            if (HasAnyWillDraw())
+            {
+                InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
+                InspectorDrawerUtility.DrawLable("Draw By Inspecter Drawer", Color.cyan);
+                InspectorDrawerUtility.DrawHorizontalLine(Color.gray);
+            }
+
             this.DrawShowInInspector();
             this.DrawButton();
         }
@@ -162,6 +166,49 @@ namespace GMToolKit.Inspector
                     method.Invoke(this.mono, paramArray);
                 }
             }
+        }
+
+        private bool HasAnyWillDraw()
+        {
+            var type = this.mono.GetType();
+            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            foreach (var showEntity in showFieldList)
+            {
+                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                if (inspectAttr == null)
+                {
+                    continue;
+                }
+                return true;
+            }
+
+            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            foreach (var showEntity in showPropertyList)
+            {
+                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                if (inspectAttr == null)
+                {
+                    continue;
+                }
+                var getMethod = showEntity.GetMethod;
+                if (getMethod == null)
+                {
+                    continue;
+                }
+                return true;
+            }
+
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            foreach (var method in methods)
+            {
+                var buttonAttribute = method.GetCustomAttribute<ButtonAttribute>();
+                if (buttonAttribute == null)
+                {
+                    continue;
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

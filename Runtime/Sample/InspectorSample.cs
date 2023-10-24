@@ -6,8 +6,15 @@ namespace GMToolKit.Inspector
 {
     public class InspectorSample : MonoBehaviour
     {
-        [Inspect]
+        [Inspect("这是一个静态字段")]
         private static int staticInt = 4;
+        [Inspect("这是一个静态属性")]
+        private static int staticIntPro
+        {
+            get => staticInt;
+            set => staticInt = value;
+        }
+
 
         [SerializeField, HideInInspector, Inspect]
         private Sectionary<TestClass, int> i;

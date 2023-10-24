@@ -62,7 +62,7 @@ namespace GMToolKit.Inspector
                 }
             }
 
-            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             foreach (var showEntity in showPropertyList)
             {
                 var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
@@ -88,7 +88,14 @@ namespace GMToolKit.Inspector
                 }
                 if (changed)
                 {
-                    setMethod.Invoke(this.mono, new object[] { newValue });
+                    if (setMethod.IsStatic)
+                    {
+                        setMethod.Invoke(null, new object[] { newValue });
+                    }
+                    else
+                    {
+                        setMethod.Invoke(this.mono, new object[] { newValue });
+                    }
                 }
             }
         }

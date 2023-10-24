@@ -76,6 +76,11 @@ namespace GMToolKit.Inspector
         {
             Debug.Log(param.Count + param1.Count);
         }
+        [Button]
+        private static void StatcMethod()
+        {
+            Debug.Log("StatcMethod");
+        }
     }
 
     public enum TestEnum

@@ -96,7 +96,7 @@ namespace GMToolKit.Inspector
         private void DrawButton()
         {
             var type = this.mono.GetType();
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
             foreach (var method in methods)
             {
                 var buttonAttribute = method.GetCustomAttribute<ButtonAttribute>();
@@ -108,6 +108,7 @@ namespace GMToolKit.Inspector
                 var methodHashCode = method.GetHashCode().ToString();
                 var cachePreKey = monoInstanceId + methodHashCode;
                 var functionName = string.IsNullOrEmpty(buttonAttribute.functionName) ? method.Name : buttonAttribute.functionName;
+                bool isStatic = method.IsStatic;
                 bool onClick = false;
                 var parameters = method.GetParameters();
                 if (parameters.Length != 0)
@@ -155,7 +156,7 @@ namespace GMToolKit.Inspector
 
                 if (onClick)
                 {
-                    var paramArray = new object[parameters.Length];
+                    object[] paramArray = new object[parameters.Length]; ;
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         var param = parameters[i];
@@ -163,7 +164,15 @@ namespace GMToolKit.Inspector
                         var paramValue = InspectorDrawerCache.Instance.Get(paramKey);
                         paramArray[i] = paramValue;
                     }
-                    method.Invoke(this.mono, paramArray);
+                    if (isStatic)
+                    {
+                        method.Invoke(null, paramArray);
+                    }
+                    else
+                    {
+                        method.Invoke(this.mono, paramArray);
+                    }
+
                 }
             }
         }

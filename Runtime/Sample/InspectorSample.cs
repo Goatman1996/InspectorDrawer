@@ -6,6 +6,9 @@ namespace GMToolKit.Inspector
 {
     public class InspectorSample : MonoBehaviour
     {
+        [Inspect]
+        private static int staticInt = 4;
+
         [SerializeField, HideInInspector, Inspect]
         private Sectionary<TestClass, int> i;
 

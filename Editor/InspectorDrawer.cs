@@ -37,7 +37,7 @@ namespace GMToolKit.Inspector
         private void DrawShowInInspector()
         {
             var type = this.mono.GetType();
-            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             var serializedObj = new SerializedObject(this.mono);
             foreach (var showEntity in showFieldList)
             {

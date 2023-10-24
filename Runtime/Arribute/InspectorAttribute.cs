@@ -27,5 +27,18 @@ namespace GMToolKit.Inspector
             this.showingName = showingName;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class InspectIf : Attribute
+    {
+        public string condition = null;
+        public object optionalValue = null;
+
+        public InspectIf(string showIf, object showIfParam = null)
+        {
+            this.condition = showIf;
+            this.optionalValue = showIfParam;
+        }
+    }
 }
 

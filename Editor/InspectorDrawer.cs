@@ -41,11 +41,13 @@ namespace GMToolKit.Inspector
             var serializedObj = new SerializedObject(this.mono);
             foreach (var showEntity in showFieldList)
             {
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
-                if (inspectAttr == null)
+                var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
+                if (!needInspect)
                 {
                     continue;
                 }
+                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+
                 var oldValue = showEntity.GetValue(this.mono);
                 var monoInstanceId = this.mono.GetInstanceID().ToString();
                 var cacheKey = monoInstanceId;
@@ -65,17 +67,27 @@ namespace GMToolKit.Inspector
             var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             foreach (var showEntity in showPropertyList)
             {
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
-                if (inspectAttr == null)
+                var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
+                if (!needInspect)
                 {
                     continue;
                 }
+                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+
                 var getMethod = showEntity.GetMethod;
                 if (getMethod == null)
                 {
                     continue;
                 }
-                var oldValue = getMethod.Invoke(this.mono, default);
+                object oldValue = null;
+                if (getMethod.IsStatic)
+                {
+                    oldValue = getMethod.Invoke(null, default);
+                }
+                else
+                {
+                    oldValue = getMethod.Invoke(this.mono, default);
+                }
                 var monoInstanceId = this.mono.GetInstanceID().ToString();
                 var cacheKey = monoInstanceId + showEntity.GetHashCode().ToString() + showEntity.Name;
                 var showiingName = string.IsNullOrEmpty(inspectAttr.showingName) ? showEntity.Name : inspectAttr.showingName;
@@ -190,8 +202,8 @@ namespace GMToolKit.Inspector
             var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var showEntity in showFieldList)
             {
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
-                if (inspectAttr == null)
+                var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
+                if (!needInspect)
                 {
                     continue;
                 }
@@ -201,8 +213,8 @@ namespace GMToolKit.Inspector
             var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var showEntity in showPropertyList)
             {
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
-                if (inspectAttr == null)
+                var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
+                if (!needInspect)
                 {
                     continue;
                 }

@@ -6,6 +6,22 @@ namespace GMToolKit.Inspector
 {
     public class InspectorSample : MonoBehaviour
     {
+        [Inspect("Bool 判断条件")]
+        private bool InspectIfBool = true;
+        [Inspect("Bool 判断条件 显示"), InspectIf("InspectIfBool")]
+        private bool ConditionByBool = true;
+
+        [Inspect("Int 判断条件")]
+        private int InspectIfInt = 5;
+        [Inspect("Int 判断条件 显示"), InspectIf("InspectIfInt", 0)]
+        private bool ConditionByInt = true;
+
+        [Inspect("Float 判断条件")]
+        private float InspectIfFloat = 0f;
+        private bool InspectIfFloatBool { get => InspectIfFloat > 10; }
+        [Inspect("Float 判断条件 > 10显示"), InspectIf("InspectIfFloatBool")]
+        private bool ConditionByFloat = true;
+
         [Inspect("这是一个静态字段")]
         private static int staticInt = 4;
         [Inspect("这是一个静态属性")]
@@ -14,7 +30,6 @@ namespace GMToolKit.Inspector
             get => staticInt;
             set => staticInt = value;
         }
-
 
         [SerializeField, HideInInspector, Inspect]
         private Sectionary<TestClass, int> i;

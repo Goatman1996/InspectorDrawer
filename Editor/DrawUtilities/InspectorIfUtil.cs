@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
             var condition = inspectIFAttr.condition;
             var optionalValue = inspectIFAttr.optionalValue;
 
-            var conditionalField = mono.GetType().GetField(condition, bindingAttr);
+            var conditionalField = InspectorReflectionUtil.FindField(mono.GetType(), condition);
             if (conditionalField != null)
             {
                 object conditionalValue = null;
@@ -37,7 +37,7 @@ namespace GMToolKit.Inspector
                 }
             }
 
-            var conditionalProperty = mono.GetType().GetProperty(condition, bindingAttr);
+            var conditionalProperty = InspectorReflectionUtil.FindProperty(mono.GetType(), condition);
             if (conditionalProperty != null && conditionalProperty.GetMethod != null)
             {
                 object conditionalValue = null;

@@ -4,8 +4,11 @@ using System;
 
 namespace GMToolKit.Inspector
 {
-    public class InspectorSample : MonoBehaviour
+    public class InspectorSample : InspectorSampleBase
     {
+        [Inspect("Base Bool 判断条件 显示"), InspectIf("ShowBase")]
+        private bool ConditionByBaseBool = true;
+
         [Inspect("Bool 判断条件")]
         private bool InspectIfBool = true;
         [Inspect("Bool 判断条件 显示"), InspectIf("InspectIfBool")]

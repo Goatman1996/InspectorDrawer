@@ -37,7 +37,7 @@ namespace GMToolKit.Inspector
         private void DrawShowInInspector()
         {
             var type = this.mono.GetType();
-            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            var showFieldList = InspectorReflectionUtil.GetFields(type);
             var serializedObj = new SerializedObject(this.mono);
             foreach (var showEntity in showFieldList)
             {
@@ -64,7 +64,7 @@ namespace GMToolKit.Inspector
                 }
             }
 
-            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            var showPropertyList = InspectorReflectionUtil.GetProperties(type);
             foreach (var showEntity in showPropertyList)
             {
                 var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
@@ -199,7 +199,7 @@ namespace GMToolKit.Inspector
         private bool HasAnyWillDraw()
         {
             var type = this.mono.GetType();
-            var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var showFieldList = InspectorReflectionUtil.GetFields(type);
             foreach (var showEntity in showFieldList)
             {
                 var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);
@@ -210,7 +210,7 @@ namespace GMToolKit.Inspector
                 return true;
             }
 
-            var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var showPropertyList = InspectorReflectionUtil.GetProperties(type);
             foreach (var showEntity in showPropertyList)
             {
                 var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, this.mono);

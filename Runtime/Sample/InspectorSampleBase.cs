@@ -11,5 +11,10 @@ namespace GMToolKit.Inspector
 
         [Inspect("基类中的Int"), InspectIf("ShowBaseProperty")]
         private int BaseInt;
+
+        [Inspect("常量Int")]
+        private const int ConstInt = 0;
+        [Inspect("只读Int")]
+        private readonly int readonlyInt = 0;
     }
 }

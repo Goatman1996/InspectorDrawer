@@ -55,6 +55,9 @@ namespace GMToolKit.Inspector
                 var newValue = InspectorDrawerUtility.DrawField(showiingName, showEntity.FieldType, oldValue, cacheKey, out bool changed);
                 if (changed)
                 {
+                    if (showEntity.IsInitOnly) continue;
+                    if (showEntity.IsLiteral) continue;
+
                     showEntity.SetValue(this.mono, newValue);
 
                     if (serializedObj.FindProperty(showEntity.Name) != null)

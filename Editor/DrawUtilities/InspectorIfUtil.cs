@@ -5,7 +5,7 @@ namespace GMToolKit.Inspector
 {
     public class InspectorIfUtil
     {
-        private static bool CheckInspectIf(InspectIf inspectIFAttr, MonoBehaviour mono)
+        private static bool CheckInspectIf(InspectIf inspectIFAttr, object mono)
         {
             var bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
             var condition = inspectIFAttr.condition;
@@ -67,7 +67,7 @@ namespace GMToolKit.Inspector
             return false;
         }
 
-        public static bool CheckInspectIf(FieldInfo field, MonoBehaviour mono)
+        public static bool CheckInspectIf(FieldInfo field, object mono)
         {
             var inspectAttr = field.GetCustomAttribute<Inspect>();
             if (inspectAttr == null)
@@ -84,7 +84,7 @@ namespace GMToolKit.Inspector
             return CheckInspectIf(inspectIFAttr, mono);
         }
 
-        public static bool CheckInspectIf(PropertyInfo propertyInfo, MonoBehaviour mono)
+        public static bool CheckInspectIf(PropertyInfo propertyInfo, object mono)
         {
             var inspectAttr = propertyInfo.GetCustomAttribute<Inspect>();
             if (inspectAttr == null)

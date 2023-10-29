@@ -701,7 +701,7 @@ namespace GMToolKit.Inspector
                 EditorGUILayout.BeginVertical("RL Background");
                 InspectorDrawer.DrawerLevel++;
 
-                var showFieldList = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                var showFieldList = InspectorReflectionUtil.GetFields(type);
                 foreach (var showEntity in showFieldList)
                 {
                     var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
@@ -720,7 +720,7 @@ namespace GMToolKit.Inspector
                     }
                 }
 
-                var showPropertyList = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                var showPropertyList = InspectorReflectionUtil.GetProperties(type);
                 foreach (var showEntity in showPropertyList)
                 {
                     var inspectAttr = showEntity.GetCustomAttribute<Inspect>();

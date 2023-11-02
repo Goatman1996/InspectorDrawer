@@ -289,28 +289,6 @@ namespace GMToolKit.Inspector
                     changed = true;
                 }
 
-                if (array.Length > 0)
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    int delectIndex = InspectorDrawerCache.Instance.Get<int>(paramCacheKey + "DelectIndex");
-                    delectIndex = EditorGUILayout.IntSlider(delectIndex, 0, array.Length - 1);
-                    InspectorDrawerCache.Instance.Set(paramCacheKey + "DelectIndex", delectIndex);
-                    var onDelete = GUILayout.Button("Delete Index", GUILayout.Width(100));
-                    EditorGUILayout.EndHorizontal();
-                    if (onDelete)
-                    {
-                        Array newArray = Array.CreateInstance(elementType, array.Length - 1);
-                        for (int i = 0; i < array.Length - 1; i++)
-                        {
-                            var newValue = i < delectIndex ? array.GetValue(i) : array.GetValue(i + 1);
-                            newArray.SetValue(newValue, i);
-                        }
-                        array = newArray;
-                        oldValue = array;
-                        changed = true;
-                    }
-                }
-
                 int pageIndex = 0;
                 var maxPageIndex = (array.Length - 1) / 10;
                 if (maxPageIndex >= 1)
@@ -338,6 +316,7 @@ namespace GMToolKit.Inspector
                     {
                         break;
                     }
+                    EditorGUILayout.BeginHorizontal();
                     object newValue = null;
                     newValue = DrawField(index.ToString(), elementType, array.GetValue(index), paramCacheKey + index, out bool c1);
                     if (c1)
@@ -346,6 +325,25 @@ namespace GMToolKit.Inspector
                         changed = true;
                     }
 
+                    var oldC = GUI.color;
+                    GUI.color = new Color(200 / 255f, 70 / 255f, 70 / 255f);
+                    var needDelete = GUILayout.Button("X", GUILayout.Width(20));
+                    GUI.color = oldC;
+                    EditorGUILayout.EndHorizontal();
+
+                    if (needDelete)
+                    {
+                        Array newArray = Array.CreateInstance(elementType, array.Length - 1);
+                        for (int i = 0; i < array.Length - 1; i++)
+                        {
+                            var newValueCopy = i < index ? array.GetValue(i) : array.GetValue(i + 1);
+                            newArray.SetValue(newValueCopy, i);
+                        }
+                        array = newArray;
+                        oldValue = array;
+                        changed = true;
+                        break;
+                    }
                 }
                 InspectorDrawer.DrawerLevel--;
 
@@ -419,21 +417,6 @@ namespace GMToolKit.Inspector
                     changed = true;
                 }
 
-                if (ilist.Count > 0)
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    int delectIndex = InspectorDrawerCache.Instance.Get<int>(paramCacheKey + "DelectIndex");
-                    delectIndex = EditorGUILayout.IntSlider(delectIndex, 0, ilist.Count - 1);
-                    InspectorDrawerCache.Instance.Set(paramCacheKey + "DelectIndex", delectIndex);
-                    var onDelete = GUILayout.Button("Delete Index", GUILayout.Width(100));
-                    EditorGUILayout.EndHorizontal();
-                    if (onDelete)
-                    {
-                        ilist.RemoveAt(delectIndex);
-                        changed = true;
-                    }
-                }
-
                 var length = ilist.Count;
 
                 int pageIndex = 0;
@@ -464,12 +447,26 @@ namespace GMToolKit.Inspector
                     {
                         break;
                     }
+                    EditorGUILayout.BeginHorizontal();
                     var value = ilist[index];
-                    value = DrawField(index.ToString(), genericType, value, paramCacheKey + index, out bool c1);
+                    value = DrawField($"Element {index}", genericType, value, paramCacheKey + index, out bool c1);
                     if (c1)
                     {
                         ilist[index] = value;
                         changed = true;
+                    }
+
+                    var oldC = GUI.color;
+                    GUI.color = new Color(200 / 255f, 70 / 255f, 70 / 255f);
+                    var needDelete = GUILayout.Button("X", GUILayout.Width(20));
+                    GUI.color = oldC;
+                    EditorGUILayout.EndHorizontal();
+
+                    if (needDelete)
+                    {
+                        ilist.RemoveAt(index);
+                        changed = true;
+                        break;
                     }
                 }
                 InspectorDrawer.DrawerLevel--;

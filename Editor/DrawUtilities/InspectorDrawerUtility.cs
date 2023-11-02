@@ -256,6 +256,31 @@ namespace GMToolKit.Inspector
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
 
+            if (isFoldOut)
+            {
+                var pageIndexKey = paramCacheKey + "pageIndex";
+                var pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
+                var length = array.Length;
+                var maxPageIndex = (length - 1) / 10;
+
+                if (maxPageIndex >= 1)
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
+                    {
+                        pageIndex--;
+                    }
+                    pageIndex = EditorGUILayout.IntField(pageIndex, GUILayout.Width(30));
+                    GUILayout.Label($"/{maxPageIndex}");
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
+                    {
+                        pageIndex++;
+                    }
+                }
+                pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
+                InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
+            }
+
             int newLength = EditorGUILayout.DelayedIntField(array.Length, GUILayout.Width(50));
             if (newLength != array.Length)
             {
@@ -293,27 +318,9 @@ namespace GMToolKit.Inspector
                 EditorGUILayout.BeginVertical("RL Background");
                 InspectorDrawer.DrawerLevel++;
 
-                int pageIndex = 0;
-                var maxPageIndex = (array.Length - 1) / 10;
-                if (maxPageIndex >= 1)
-                {
-                    var pageIndexKey = paramCacheKey + "pageIndex";
-                    pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
+                var pageIndexKey = paramCacheKey + "pageIndex";
+                int pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
 
-                    EditorGUILayout.BeginHorizontal();
-                    pageIndex = EditorGUILayout.IntField("Page index : ", pageIndex);
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
-                    {
-                        pageIndex--;
-                    }
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
-                    {
-                        pageIndex++;
-                    }
-                    pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
-                    EditorGUILayout.EndHorizontal();
-                    InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
-                }
                 for (int index = pageIndex * 10; index < pageIndex * 10 + 10; index++)
                 {
                     if (index >= array.Length)
@@ -380,8 +387,32 @@ namespace GMToolKit.Inspector
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
 
-            int newLength = EditorGUILayout.DelayedIntField(ilist.Count, GUILayout.Width(50));
+            if (isFoldOut)
+            {
+                var pageIndexKey = paramCacheKey + "pageIndex";
+                var pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
+                var length = ilist.Count;
+                var maxPageIndex = (length - 1) / 10;
 
+                if (maxPageIndex >= 1)
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
+                    {
+                        pageIndex--;
+                    }
+                    pageIndex = EditorGUILayout.IntField(pageIndex, GUILayout.Width(30));
+                    GUILayout.Label($"/{maxPageIndex}");
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
+                    {
+                        pageIndex++;
+                    }
+                }
+                pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
+                InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
+            }
+
+            int newLength = EditorGUILayout.DelayedIntField(ilist.Count, GUILayout.Width(50));
             if (newLength != ilist.Count)
             {
                 if (newLength > ilist.Count)
@@ -400,7 +431,6 @@ namespace GMToolKit.Inspector
                         ilist.RemoveAt(ilist.Count - 1);
                     }
                 }
-
                 changed = true;
             }
 
@@ -417,27 +447,8 @@ namespace GMToolKit.Inspector
 
                 var length = ilist.Count;
 
-                int pageIndex = 0;
-                var maxPageIndex = (length - 1) / 10;
-                if (maxPageIndex >= 1)
-                {
-                    var pageIndexKey = paramCacheKey + "pageIndex";
-                    pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
-
-                    EditorGUILayout.BeginHorizontal();
-                    pageIndex = EditorGUILayout.DelayedIntField("Page index : ", pageIndex);
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
-                    {
-                        pageIndex--;
-                    }
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
-                    {
-                        pageIndex++;
-                    }
-                    pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
-                    EditorGUILayout.EndHorizontal();
-                    InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
-                }
+                var pageIndexKey = paramCacheKey + "pageIndex";
+                int pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
 
                 for (int index = pageIndex * 10; index < pageIndex * 10 + 10; index++)
                 {

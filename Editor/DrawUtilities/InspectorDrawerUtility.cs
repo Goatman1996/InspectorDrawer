@@ -255,28 +255,11 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndHorizontal();
 
-            InspectorDrawerCache.Instance.Set(isFoldOutKey, isFoldOut);
-
-            if (isFoldOut)
+            int newLength = EditorGUILayout.DelayedIntField(array.Length, GUILayout.Width(50));
+            if (newLength != array.Length)
             {
-                EditorGUILayout.BeginHorizontal();
-                if (InspectorDrawer.DrawerLevel != 0) GUILayout.Space(10f);
-                EditorGUILayout.BeginVertical("RL Background");
-                InspectorDrawer.DrawerLevel++;
-
-                var newLength = array.Length;
-
-                EditorGUILayout.BeginHorizontal();
-                int addCount = InspectorDrawerCache.Instance.Get<int>(paramCacheKey + "AddCount");
-                addCount = EditorGUILayout.IntSlider(addCount, 1, 10);
-                InspectorDrawerCache.Instance.Set(paramCacheKey + "AddCount", addCount);
-                var onAdd = GUILayout.Button("Add Count", GUILayout.Width(100));
-                EditorGUILayout.EndHorizontal();
-                if (onAdd) newLength += addCount;
-                if (newLength != array.Length)
+                if (newLength > array.Length)
                 {
                     Array newArray = Array.CreateInstance(elementType, newLength);
                     for (int i = 0; i < newLength; i++)
@@ -288,6 +271,27 @@ namespace GMToolKit.Inspector
                     oldValue = array;
                     changed = true;
                 }
+                else
+                {
+                    Array newArray = Array.CreateInstance(elementType, newLength);
+                    Array.Copy(array, newArray, newLength);
+                    array = newArray;
+                    oldValue = array;
+                    changed = true;
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndHorizontal();
+
+            InspectorDrawerCache.Instance.Set(isFoldOutKey, isFoldOut);
+
+            if (isFoldOut)
+            {
+                EditorGUILayout.BeginHorizontal();
+                if (InspectorDrawer.DrawerLevel != 0) GUILayout.Space(10f);
+                EditorGUILayout.BeginVertical("RL Background");
+                InspectorDrawer.DrawerLevel++;
 
                 int pageIndex = 0;
                 var maxPageIndex = (array.Length - 1) / 10;
@@ -318,7 +322,7 @@ namespace GMToolKit.Inspector
                     }
                     EditorGUILayout.BeginHorizontal();
                     object newValue = null;
-                    newValue = DrawField(index.ToString(), elementType, array.GetValue(index), paramCacheKey + index, out bool c1);
+                    newValue = DrawField($"Element {index}", elementType, array.GetValue(index), paramCacheKey + index, out bool c1);
                     if (c1)
                     {
                         array.SetValue(newValue, index);
@@ -375,6 +379,31 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            int newLength = EditorGUILayout.DelayedIntField(ilist.Count, GUILayout.Width(50));
+
+            if (newLength != ilist.Count)
+            {
+                if (newLength > ilist.Count)
+                {
+                    var moreCount = newLength - ilist.Count;
+                    for (int count = 0; count < moreCount; count++)
+                    {
+                        ilist.Add(Activator.CreateInstance(genericType));
+                    }
+                }
+                else
+                {
+                    var lessCount = ilist.Count - newLength;
+                    for (int count = 0; count < lessCount; count++)
+                    {
+                        ilist.RemoveAt(ilist.Count - 1);
+                    }
+                }
+
+                changed = true;
+            }
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndHorizontal();
             InspectorDrawerCache.Instance.Set(isFoldOutKey, isFoldOut);
@@ -385,37 +414,6 @@ namespace GMToolKit.Inspector
                 if (InspectorDrawer.DrawerLevel != 0) GUILayout.Space(10f);
                 EditorGUILayout.BeginVertical("RL Background");
                 InspectorDrawer.DrawerLevel++;
-
-                int newLength = ilist.Count;
-
-                EditorGUILayout.BeginHorizontal();
-                int addCount = InspectorDrawerCache.Instance.Get<int>(paramCacheKey + "AddCount");
-                addCount = EditorGUILayout.IntSlider(addCount, 1, 10);
-                InspectorDrawerCache.Instance.Set(paramCacheKey + "AddCount", addCount);
-                var onAdd = GUILayout.Button("Add Count", GUILayout.Width(100));
-                EditorGUILayout.EndHorizontal();
-                if (onAdd) newLength += addCount;
-                if (newLength != ilist.Count)
-                {
-                    if (newLength > ilist.Count)
-                    {
-                        var moreCount = newLength - ilist.Count;
-                        for (int count = 0; count < moreCount; count++)
-                        {
-                            ilist.Add(Activator.CreateInstance(genericType));
-                        }
-                    }
-                    else
-                    {
-                        var lessCount = ilist.Count - newLength;
-                        for (int count = 0; count < lessCount; count++)
-                        {
-                            ilist.RemoveAt(ilist.Count - 1);
-                        }
-                    }
-
-                    changed = true;
-                }
 
                 var length = ilist.Count;
 

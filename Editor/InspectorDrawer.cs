@@ -5,11 +5,16 @@ using System.Reflection;
 namespace GMToolKit.Inspector
 {
     [CustomEditor(typeof(MonoBehaviour), true)]
-    public class InspectorDrawer : UnityEditor.Editor
+    public class MonoBehaviourDrawer : InspectorDrawer { }
+
+    [CustomEditor(typeof(ScriptableObject), true)]
+    public class ScriptableObjectDrawer : InspectorDrawer { }
+
+    public abstract class InspectorDrawer : UnityEditor.Editor
     {
         public static int DrawerLevel = 0;
 
-        private MonoBehaviour mono { get => target as MonoBehaviour; }
+        private UnityEngine.Object mono { get => target as UnityEngine.Object; }
 
         public override void OnInspectorGUI()
         {

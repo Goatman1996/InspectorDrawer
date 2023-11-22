@@ -328,6 +328,8 @@ namespace GMToolKit.Inspector
                         break;
                     }
                     EditorGUILayout.BeginHorizontal();
+
+                    EditorGUILayout.BeginVertical();
                     object newValue = null;
                     newValue = DrawField($"Element {index}", elementType, array.GetValue(index), paramCacheKey + index, out bool c1);
                     if (c1)
@@ -335,6 +337,7 @@ namespace GMToolKit.Inspector
                         array.SetValue(newValue, index);
                         changed = true;
                     }
+                    EditorGUILayout.EndVertical();
 
                     var oldC = GUI.color;
                     GUI.color = new Color(200 / 255f, 70 / 255f, 70 / 255f);
@@ -481,8 +484,8 @@ namespace GMToolKit.Inspector
                         break;
                     }
                 }
-                InspectorDrawer.DrawerLevel--;
 
+                InspectorDrawer.DrawerLevel--;
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();
             }
@@ -760,8 +763,10 @@ namespace GMToolKit.Inspector
 
                 InspectorDrawer.DrawerLevel--;
                 EditorGUILayout.EndVertical();
+
                 EditorGUILayout.EndHorizontal();
             }
+
 
             return oldValue;
         }

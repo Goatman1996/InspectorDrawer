@@ -28,6 +28,18 @@ namespace GMToolKit.Inspector
             GUI.color = colorTemp;
         }
 
+        public static void DrawVerticalLine(UnityEngine.Color color)
+        {
+            var colorTemp = GUI.color;
+            GUI.color = color;
+            GUIStyle line = new GUIStyle();
+            line.normal.background = EditorGUIUtility.whiteTexture;
+            line.margin = new RectOffset(0, 0, 3, 3);
+            line.fixedHeight = 1;
+            GUILayout.Box(GUIContent.none, line, GUILayout.ExpandHeight(true));
+            GUI.color = colorTemp;
+        }
+
         public static void DrawLable(string content, Color color)
         {
             var colorTemp = GUI.color;
@@ -518,10 +530,43 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            int length = iDictionary.Count;
+
+            int pageIndex = 0;
+            var maxPageIndex = (length - 1) / 10;
+            if (isFoldOut)
+            {
+                if (maxPageIndex >= 1)
+                {
+                    GUILayout.FlexibleSpace();
+                    var pageIndexKey = paramCacheKey + "pageIndex";
+                    pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
+
+                    // EditorGUILayout.BeginHorizontal();
+                    // pageIndex = EditorGUILayout.DelayedIntField("Page index : ", pageIndex);
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
+                    {
+                        pageIndex--;
+                    }
+                    pageIndex = EditorGUILayout.IntField(pageIndex, GUILayout.Width(30));
+                    GUILayout.Label($"/{maxPageIndex}");
+                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
+                    {
+                        pageIndex++;
+                    }
+                    pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
+                    // EditorGUILayout.EndHorizontal();
+                    InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
+                }
+            }
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndHorizontal();
 
             InspectorDrawerCache.Instance.Set(isFoldOutKey, isFoldOut);
+
+
 
             if (isFoldOut)
             {
@@ -550,17 +595,22 @@ namespace GMToolKit.Inspector
 
                     var addKeyCache = paramCacheKey + "AddKey";
                     var addKey = InspectorDrawerCache.Instance.Get(addKeyCache);
-                    var addKeyName = "Add Key";
+                    var addKeyName = "Key";
+
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.BeginVertical();
                     addKey = InspectorDrawerUtility.DrawField(addKeyName, keyType, addKey, addKeyCache, out bool c1);
                     if (c1)
                     {
                         InspectorDrawerCache.Instance.Set(addKeyCache, addKey);
                     }
+                    EditorGUILayout.EndVertical();
 
                     var oColor = GUI.color;
                     GUI.color = Color.green;
                     var addBtn = GUILayout.Button("Add", GUILayout.Width(100));
                     GUI.color = oColor;
+                    EditorGUILayout.EndHorizontal();
 
                     if (addBtn)
                     {
@@ -589,30 +639,31 @@ namespace GMToolKit.Inspector
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.EndHorizontal();
                 }
+                DrawHorizontalLine(Color.gray);
 
-                int length = iDictionary.Count;
+                // int length = iDictionary.Count;
 
-                int pageIndex = 0;
-                var maxPageIndex = (length - 1) / 10;
-                if (maxPageIndex >= 1)
-                {
-                    var pageIndexKey = paramCacheKey + "pageIndex";
-                    pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
+                // int pageIndex = 0;
+                // var maxPageIndex = (length - 1) / 10;
+                // if (maxPageIndex >= 1)
+                // {
+                //     var pageIndexKey = paramCacheKey + "pageIndex";
+                //     pageIndex = InspectorDrawerCache.Instance.Get<int>(pageIndexKey);
 
-                    EditorGUILayout.BeginHorizontal();
-                    pageIndex = EditorGUILayout.DelayedIntField("Page index : ", pageIndex);
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
-                    {
-                        pageIndex--;
-                    }
-                    if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
-                    {
-                        pageIndex++;
-                    }
-                    pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
-                    EditorGUILayout.EndHorizontal();
-                    InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
-                }
+                //     EditorGUILayout.BeginHorizontal();
+                //     pageIndex = EditorGUILayout.DelayedIntField("Page index : ", pageIndex);
+                //     if (GUILayout.Button("", new GUIStyle("ArrowNavigationLeft")))
+                //     {
+                //         pageIndex--;
+                //     }
+                //     if (GUILayout.Button("", new GUIStyle("ArrowNavigationRight")))
+                //     {
+                //         pageIndex++;
+                //     }
+                //     pageIndex = Mathf.Clamp(pageIndex, 0, maxPageIndex);
+                //     EditorGUILayout.EndHorizontal();
+                //     InspectorDrawerCache.Instance.Set(pageIndexKey, pageIndex);
+                // }
 
                 var keys = iDictionary.Keys;
 
@@ -631,6 +682,12 @@ namespace GMToolKit.Inspector
                 index = pageIndex * 10;
                 foreach (var key in showingKeyList)
                 {
+                    EditorGUILayout.Space(7);
+
+                    EditorGUILayout.BeginHorizontal();
+
+                    EditorGUILayout.BeginVertical();
+
                     GUI.enabled = IsKeyTypeChangeable(keyType);
                     DrawField("Key", keyType, key, paramCacheKey + index + "Key", out bool c2);
                     if (c2)
@@ -638,7 +695,11 @@ namespace GMToolKit.Inspector
                         changed = true;
                     }
                     GUI.enabled = true;
+                    // EditorGUILayout.EndVertical();
 
+                    // DrawVerticalLine(Color.gray);
+
+                    // EditorGUILayout.BeginVertical();
                     var value = iDictionary[key];
                     value = DrawField("Value", valueType, value, paramCacheKey + index + "Value", out bool c3);
                     if (c3)
@@ -646,17 +707,21 @@ namespace GMToolKit.Inspector
                         iDictionary[key] = value;
                         changed = true;
                     }
+                    EditorGUILayout.EndVertical();
 
                     var originColor = GUI.color;
                     GUI.color = Color.red;
                     var delete = GUILayout.Button("Delete");
                     GUI.color = originColor;
+
+                    EditorGUILayout.EndHorizontal();
                     if (delete)
                     {
                         keyToDelete = key;
                         break;
                     }
                     index++;
+
                 }
 
                 if (keyToDelete != null)

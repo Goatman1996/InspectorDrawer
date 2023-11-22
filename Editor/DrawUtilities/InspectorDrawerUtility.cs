@@ -457,6 +457,8 @@ namespace GMToolKit.Inspector
                         break;
                     }
                     EditorGUILayout.BeginHorizontal();
+
+                    EditorGUILayout.BeginVertical();
                     var value = ilist[index];
                     value = DrawField($"Element {index}", genericType, value, paramCacheKey + index, out bool c1);
                     if (c1)
@@ -464,6 +466,7 @@ namespace GMToolKit.Inspector
                         ilist[index] = value;
                         changed = true;
                     }
+                    EditorGUILayout.EndVertical();
 
                     var oldC = GUI.color;
                     GUI.color = new Color(200 / 255f, 70 / 255f, 70 / 255f);

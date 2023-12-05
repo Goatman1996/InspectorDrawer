@@ -36,6 +36,39 @@ namespace GMToolKit.Inspector
                 showingDic[key] = value;
             }
         }
+
+        public Dictionary<KeyT, ValueT> Dictionary => showingDic;
+
+        public ValueT this[KeyT key]
+        {
+            get => showingDic[key];
+            set => showingDic[key] = value;
+        }
+
+        public bool ContainsKey(KeyT key)
+        {
+            return showingDic.ContainsKey(key);
+        }
+
+        public bool Remove(KeyT key)
+        {
+            return showingDic.Remove(key);
+        }
+
+        public bool TryGetValue(KeyT key, out ValueT value)
+        {
+            return showingDic.TryGetValue(key, out value);
+        }
+
+        public void Add(KeyT key, ValueT value)
+        {
+            showingDic.Add(key, value);
+        }
+
+        public void Clear()
+        {
+            showingDic.Clear();
+        }
     }
 }
 

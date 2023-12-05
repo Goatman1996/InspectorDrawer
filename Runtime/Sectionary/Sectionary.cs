@@ -16,7 +16,7 @@ namespace GMToolKit.Inspector
 
         [Inspect] private Dictionary<KeyT, ValueT> showingDic = new Dictionary<KeyT, ValueT>();
 
-        public void OnBeforeSerialize()
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             keyList.Clear();
             valueList.Clear();
@@ -24,7 +24,7 @@ namespace GMToolKit.Inspector
             valueList.AddRange(showingDic.Values);
         }
 
-        public void OnAfterDeserialize()
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             showingDic.Clear();
 

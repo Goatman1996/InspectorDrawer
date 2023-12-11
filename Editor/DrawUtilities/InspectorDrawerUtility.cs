@@ -79,6 +79,12 @@ namespace GMToolKit.Inspector
             else if (typeof(IList).IsAssignableFrom(type)) return DrawList(name, type, oldValue, paramCacheKey, out changed);
             else if (typeof(IDictionary).IsAssignableFrom(type)) return DrawDictionary(name, type, oldValue, paramCacheKey, out changed);
             else if (type == typeof(Type)) return DrawAsType(name, oldValue, out changed);
+            else if (typeof(Delegate).IsAssignableFrom(type))
+            {
+                EditorGUILayout.LabelField($"不支持{type.Name}");
+                return null;
+            }
+
             else return DrawAsClassOrStruct(name, type, oldValue, paramCacheKey, out changed);
         }
 

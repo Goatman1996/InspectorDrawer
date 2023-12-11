@@ -248,15 +248,16 @@ namespace GMToolKit.Inspector
 
         public static Array DrawArray(string name, Type type, object oldValue, string paramCacheKey, out bool changed)
         {
-            changed = false;
+            var nullCheckerValue = DrawAsNull(name, type, oldValue, out changed);
+            if (nullCheckerValue == null)
+            {
+                return null;
+            }
+            oldValue = nullCheckerValue;
+
             paramCacheKey += name;
             var elementType = type.GetElementType();
 
-            if (oldValue == null)
-            {
-                changed = true;
-                oldValue = Array.CreateInstance(elementType, 0);
-            }
             Array array = (Array)oldValue;
 
             var isFoldOutKey = paramCacheKey + "IsFoldOut";
@@ -267,6 +268,13 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            if (GUILayout.Button("Set Null", GUILayout.Width(100)))
+            {
+                oldValue = null;
+                changed = true;
+                return null;
+            }
 
             if (isFoldOut)
             {
@@ -382,12 +390,13 @@ namespace GMToolKit.Inspector
 
         public static object DrawList(string name, Type type, object oldValue, string paramCacheKey, out bool changed)
         {
-            changed = false;
-            if (oldValue == null)
+            var nullCheckerValue = DrawAsNull(name, type, oldValue, out changed);
+            if (nullCheckerValue == null)
             {
-                changed = true;
-                oldValue = Activator.CreateInstance(type);
+                return nullCheckerValue;
             }
+            oldValue = nullCheckerValue;
+
             IList ilist = (IList)oldValue;
 
             paramCacheKey += name;
@@ -401,6 +410,13 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            if (GUILayout.Button("Set Null", GUILayout.Width(100)))
+            {
+                oldValue = null;
+                changed = true;
+                return oldValue;
+            }
 
             if (isFoldOut)
             {
@@ -507,13 +523,12 @@ namespace GMToolKit.Inspector
 
         public static object DrawDictionary(string name, Type type, object oldValue, string paramCacheKey, out bool changed)
         {
-            changed = false;
-
-            if (oldValue == null)
+            var nullCheckerValue = DrawAsNull(name, type, oldValue, out changed);
+            if (nullCheckerValue == null)
             {
-                changed = true;
-                oldValue = Activator.CreateInstance(type);
+                return nullCheckerValue;
             }
+            oldValue = nullCheckerValue;
 
             IDictionary iDictionary = (IDictionary)oldValue;
 
@@ -530,6 +545,13 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            if (GUILayout.Button("Set Null", GUILayout.Width(100)))
+            {
+                oldValue = null;
+                changed = true;
+                return oldValue;
+            }
 
             int length = iDictionary.Count;
 
@@ -749,12 +771,18 @@ namespace GMToolKit.Inspector
 
         public static object DrawAsClassOrStruct(string name, Type type, object oldValue, string paramCacheKey, out bool changed)
         {
-            changed = false;
-
-            if (oldValue == null)
+            if (type.IsClass)
             {
-                changed = true;
-                oldValue = Activator.CreateInstance(type);
+                var nullCheckerValue = DrawAsNull(name, type, oldValue, out changed);
+                if (nullCheckerValue == null)
+                {
+                    return nullCheckerValue;
+                }
+                oldValue = nullCheckerValue;
+            }
+            else
+            {
+                changed = false;
             }
 
             paramCacheKey += name;
@@ -767,6 +795,14 @@ namespace GMToolKit.Inspector
 
             GUILayout.Space(13);
             isFoldOut = EditorGUILayout.Foldout(isFoldOut, name, true, new GUIStyle("Foldout"));
+
+            if (type.IsClass && GUILayout.Button("Set Null", GUILayout.Width(100)))
+            {
+                oldValue = null;
+                changed = true;
+                return oldValue;
+            }
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndHorizontal();
             InspectorDrawerCache.Instance.Set(isFoldOutKey, isFoldOut);
@@ -834,6 +870,35 @@ namespace GMToolKit.Inspector
 
 
             return oldValue;
+        }
+
+        public static object DrawAsNull(string name, Type type, object value, out bool changed)
+        {
+            var ret = value;
+            changed = false;
+
+            if (value == null)
+            {
+                var index = EditorGUILayout.Popup(name, 0, new string[] { "Null", type.Name });
+                if (index != 0)
+                {
+                    var constrcutorArray = type.GetConstructors();
+                    foreach (var constrcutor in constrcutorArray)
+                    {
+                        if (constrcutor.GetParameters().Length == 0)
+                        {
+                            ret = Activator.CreateInstance(type);
+                        }
+                        if (constrcutor.GetParameters().Length == 1 && constrcutor.GetParameters()[0].ParameterType == typeof(int))
+                        {
+                            ret = Activator.CreateInstance(type, 0);
+                        }
+                    }
+
+                    changed = true;
+                }
+            }
+            return ret;
         }
     }
 }

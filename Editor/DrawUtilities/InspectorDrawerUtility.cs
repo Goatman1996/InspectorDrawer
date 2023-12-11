@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace GMToolKit.Inspector
 {
@@ -77,7 +78,7 @@ namespace GMToolKit.Inspector
             else if (type.IsArray) return DrawArray(name, type, oldValue, paramCacheKey, out changed);
             else if (typeof(IList).IsAssignableFrom(type)) return DrawList(name, type, oldValue, paramCacheKey, out changed);
             else if (typeof(IDictionary).IsAssignableFrom(type)) return DrawDictionary(name, type, oldValue, paramCacheKey, out changed);
-
+            else if (type == typeof(Type)) return DrawAsType(name, oldValue, out changed);
             else return DrawAsClassOrStruct(name, type, oldValue, paramCacheKey, out changed);
         }
 
@@ -451,7 +452,7 @@ namespace GMToolKit.Inspector
                     var moreCount = newLength - ilist.Count;
                     for (int count = 0; count < moreCount; count++)
                     {
-                        ilist.Add(Activator.CreateInstance(genericType));
+                        ilist.Add(default);
                     }
                 }
                 else
@@ -900,5 +901,84 @@ namespace GMToolKit.Inspector
             }
             return ret;
         }
+
+        public static object DrawAsType(string name, object value, out bool changed)
+        {
+            // GUI.enabled = false;
+            var type = value as Type;
+            changed = false;
+            if (type == null)
+            {
+                var newTypeName = EditorGUILayout.DelayedTextField(name, "Null");
+                var newType = TryGetType(newTypeName);
+                if (newType != null)
+                {
+                    changed = true;
+                    return newType;
+                }
+            }
+            else
+            {
+                var newTypeName = EditorGUILayout.DelayedTextField(name, type.Name);
+                var newType = TryGetType(newTypeName);
+                if (newType != null)
+                {
+                    changed = true;
+                    return newType;
+                }
+            }
+            // GUI.enabled = true;
+            return value;
+        }
+
+        private static Dictionary<string, Type> typeDict = new Dictionary<string, Type>();
+        public static Type TryGetType(string typeName)
+        {
+            if (!typeDict.ContainsKey(typeName))
+            {
+                var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+                var objType = allAssemblies.SelectMany(assembly => assembly.GetTypes()).FirstOrDefault(type1 => type1.Name == typeName);
+                typeDict.Add(typeName, objType);
+            }
+            return typeDict[typeName];
+        }
+
+        // private static Dictionary<int, Type> TypeDict;
+        // private static Dictionary<string, Type> TypeNameDict;
+        // private static string[] TypeNameArray;
+
+        // private static void InitializeTypeDict()
+        // {
+        //     if (TypeDict != null)
+        //     {
+        //         return;
+        //     }
+        //     TypeNameDict = new Dictionary<string, Type>();
+        //     TypeDict = new Dictionary<int, Type>();
+        //     int index = 1;
+        //     foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+        //     {
+        //         foreach (var t in ass.GetTypes())
+        //         {
+        //             if (t.IsSubclassOf(typeof(System.Attribute))) continue;
+        //             if (t.FullName.Contains("PrivateImplementationDetails")) continue;
+        //             TypeDict.Add(index, t);
+        //             var name = t.FullName.Replace(".", "/");
+        //             TypeNameDict[name] = t;
+        //             index++;
+        //         }
+
+        //     }
+        //     TypeNameArray = new string[TypeNameDict.Count + 1];
+        //     index = 0;
+        //     TypeNameArray[0] = "Null";
+        //     index++;
+        //     foreach (var kv in TypeNameDict)
+        //     {
+        //         TypeNameArray[index] = kv.Key;
+        //         index++;
+        //     }
+        //     Debug.Log(TypeNameDict.Count + 1);
+        // }
     }
 }

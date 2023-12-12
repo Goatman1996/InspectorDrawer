@@ -910,30 +910,33 @@ namespace GMToolKit.Inspector
 
         public static object DrawAsType(string name, object value, out bool changed)
         {
-            // GUI.enabled = false;
+            InitializeTypeDict();
+
             var type = value as Type;
             changed = false;
-            if (type == null)
+
+            var selectedIndex = 0;
+            if (type != null)
             {
-                var newTypeName = EditorGUILayout.DelayedTextField(name, "Null");
-                var newType = TryGetType(newTypeName);
-                if (newType != null)
-                {
-                    changed = true;
-                    return newType;
-                }
+                var typeNameWithAssembly = GetTypeNameWithAssembly(type);
+                selectedIndex = TypeNameToIndexDict[typeNameWithAssembly];
             }
-            else
+
+            var tip = type == null ? "Null" : type.FullName;
+            var Popup = EditorGUILayout.Popup(new GUIContent(name, tip), selectedIndex, TypeNameArray);
+            if (Popup == 0)
             {
-                var newTypeName = EditorGUILayout.DelayedTextField(name, type.Name);
-                var newType = TryGetType(newTypeName);
-                if (newType != null)
-                {
-                    changed = true;
-                    return newType;
-                }
+                if (type != null) changed = true;
+                return null;
             }
-            // GUI.enabled = true;
+            var newTypeName = TypeNameArray[Popup];
+            var newType = NameTypeDict[newTypeName];
+            if (newType != type)
+            {
+                changed = true;
+                return newType;
+            }
+
             return value;
         }
 
@@ -943,48 +946,60 @@ namespace GMToolKit.Inspector
             if (!typeDict.ContainsKey(typeName))
             {
                 var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-                var objType = allAssemblies.SelectMany(assembly => assembly.GetTypes()).FirstOrDefault(type1 => type1.Name == typeName);
+                var objType = allAssemblies.SelectMany(assembly => assembly.GetTypes()).FirstOrDefault(type1 => type1.Name == typeName || type1.FullName == typeName);
                 typeDict.Add(typeName, objType);
             }
             return typeDict[typeName];
         }
 
-        // private static Dictionary<int, Type> TypeDict;
-        // private static Dictionary<string, Type> TypeNameDict;
-        // private static string[] TypeNameArray;
+        private static Dictionary<string, Type> NameTypeDict;
+        private static Dictionary<string, int> TypeNameToIndexDict;
+        private static List<string> TypeNameList;
 
-        // private static void InitializeTypeDict()
-        // {
-        //     if (TypeDict != null)
-        //     {
-        //         return;
-        //     }
-        //     TypeNameDict = new Dictionary<string, Type>();
-        //     TypeDict = new Dictionary<int, Type>();
-        //     int index = 1;
-        //     foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
-        //     {
-        //         foreach (var t in ass.GetTypes())
-        //         {
-        //             if (t.IsSubclassOf(typeof(System.Attribute))) continue;
-        //             if (t.FullName.Contains("PrivateImplementationDetails")) continue;
-        //             TypeDict.Add(index, t);
-        //             var name = t.FullName.Replace(".", "/");
-        //             TypeNameDict[name] = t;
-        //             index++;
-        //         }
+        private static string[] TypeNameArray;
 
-        //     }
-        //     TypeNameArray = new string[TypeNameDict.Count + 1];
-        //     index = 0;
-        //     TypeNameArray[0] = "Null";
-        //     index++;
-        //     foreach (var kv in TypeNameDict)
-        //     {
-        //         TypeNameArray[index] = kv.Key;
-        //         index++;
-        //     }
-        //     Debug.Log(TypeNameDict.Count + 1);
-        // }
+        private static string GetTypeNameWithAssembly(Type type)
+        {
+            if (type == null) return "Null";
+
+            var ret = type.FullName.Replace(".", "/");
+            var ass = type.Assembly;
+            ret = ass.GetName().Name + "/" + ret;
+            return ret;
+        }
+
+        private static void InitializeTypeDict()
+        {
+            if (TypeNameArray != null)
+            {
+                return;
+            }
+            NameTypeDict = new Dictionary<string, Type>(1024);
+            TypeNameToIndexDict = new Dictionary<string, int>(1024);
+            TypeNameList = new List<string>(1024);
+
+            foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var t in ass.GetTypes())
+                {
+                    var typeNameWithAssembly = GetTypeNameWithAssembly(t);
+
+                    NameTypeDict[typeNameWithAssembly] = t;
+                    TypeNameList.Add(typeNameWithAssembly);
+                }
+            }
+            NameTypeDict.Add("Null", null);
+
+            TypeNameList.Sort();
+            TypeNameList.Insert(0, "Null");
+
+
+            TypeNameArray = TypeNameList.ToArray();
+
+            for (int i = 0; i < TypeNameList.Count; i++)
+            {
+                TypeNameToIndexDict.Add(TypeNameList[i], i);
+            }
+        }
     }
 }

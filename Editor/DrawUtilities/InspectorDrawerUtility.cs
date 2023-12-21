@@ -316,8 +316,23 @@ namespace GMToolKit.Inspector
                     Array newArray = Array.CreateInstance(elementType, newLength);
                     for (int i = 0; i < newLength; i++)
                     {
-                        var newValue = i < array.Length ? array.GetValue(i) : default;
-                        newArray.SetValue(newValue, i);
+                        if (i < array.Length)
+                        {
+                            newArray.SetValue(array.GetValue(i), i);
+                        }
+                        else
+                        {
+                            if (elementType.IsValueType)
+                            {
+                                newArray.SetValue(Activator.CreateInstance(elementType), i);
+                            }
+                            else
+                            {
+                                newArray.SetValue(default, i);
+                            }
+                        }
+                        // var newValue = i < array.Length ? array.GetValue(i) : default;
+                        // newArray.SetValue(newValue, i);
                     }
                     array = newArray;
                     oldValue = array;
@@ -458,7 +473,14 @@ namespace GMToolKit.Inspector
                     var moreCount = newLength - ilist.Count;
                     for (int count = 0; count < moreCount; count++)
                     {
-                        ilist.Add(default);
+                        if (genericType.IsValueType)
+                        {
+                            ilist.Add(Activator.CreateInstance(genericType));
+                        }
+                        else
+                        {
+                            ilist.Add(default);
+                        }
                     }
                 }
                 else

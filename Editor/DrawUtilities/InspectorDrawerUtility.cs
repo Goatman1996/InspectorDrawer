@@ -843,7 +843,7 @@ namespace GMToolKit.Inspector
                 EditorGUILayout.BeginVertical("RL Background");
                 InspectorDrawer.DrawerLevel++;
 
-                var showFieldList = InspectorReflectionUtil.GetFields(type);
+                var showFieldList = InspectorReflectionUtil.GetFields(oldValue.GetType());
                 foreach (var showEntity in showFieldList)
                 {
                     var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
@@ -862,7 +862,7 @@ namespace GMToolKit.Inspector
                     }
                 }
 
-                var showPropertyList = InspectorReflectionUtil.GetProperties(type);
+                var showPropertyList = InspectorReflectionUtil.GetProperties(oldValue.GetType());
                 foreach (var showEntity in showPropertyList)
                 {
                     var inspectAttr = showEntity.GetCustomAttribute<Inspect>();

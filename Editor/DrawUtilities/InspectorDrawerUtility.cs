@@ -811,6 +811,10 @@ namespace GMToolKit.Inspector
             }
             else
             {
+                if (oldValue == null)
+                {
+                    oldValue = Activator.CreateInstance(type);
+                }
                 changed = false;
             }
 

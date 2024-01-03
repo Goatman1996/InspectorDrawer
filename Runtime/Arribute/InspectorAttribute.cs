@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GMToolKit.Inspector
 {
@@ -39,6 +38,7 @@ namespace GMToolKit.Inspector
         {
             this.isReadOnly = isReadOnly;
         }
+
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
@@ -51,17 +51,6 @@ namespace GMToolKit.Inspector
         {
             this.condition = showIf;
             this.optionalValue = showIfParam;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class InspectColorAttribute : Attribute
-    {
-        private readonly Color color;
-
-        public InspectColorAttribute(UnityEngine.Color color)
-        {
-            this.color = color;
         }
     }
 }

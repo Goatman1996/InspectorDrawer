@@ -51,13 +51,16 @@ namespace GMToolKit.Inspector
                 {
                     continue;
                 }
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                var inspectAttr = showEntity.GetCustomAttribute<InspectAttribute>();
 
                 var oldValue = showEntity.GetValue(this.mono);
                 var monoInstanceId = this.mono.GetInstanceID().ToString();
                 var cacheKey = monoInstanceId;
                 var showiingName = string.IsNullOrEmpty(inspectAttr.showingName) ? showEntity.Name : inspectAttr.showingName;
+                var isReadOnly = inspectAttr.isReadOnly;
+                GUI.enabled = !isReadOnly;
                 var newValue = InspectorDrawerUtility.DrawField(showiingName, showEntity.FieldType, oldValue, cacheKey, out bool changed);
+                GUI.enabled = true;
                 if (changed)
                 {
                     if (showEntity.IsInitOnly) continue;
@@ -80,7 +83,7 @@ namespace GMToolKit.Inspector
                 {
                     continue;
                 }
-                var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                var inspectAttr = showEntity.GetCustomAttribute<InspectAttribute>();
 
                 var getMethod = showEntity.GetMethod;
                 if (getMethod == null)
@@ -99,8 +102,10 @@ namespace GMToolKit.Inspector
                 var monoInstanceId = this.mono.GetInstanceID().ToString();
                 var cacheKey = monoInstanceId + showEntity.GetHashCode().ToString() + showEntity.Name;
                 var showiingName = string.IsNullOrEmpty(inspectAttr.showingName) ? showEntity.Name : inspectAttr.showingName;
+                var isReadOnly = inspectAttr.isReadOnly;
+                GUI.enabled = !isReadOnly;
                 var newValue = InspectorDrawerUtility.DrawField(showiingName, showEntity.PropertyType, oldValue, cacheKey, out bool changed);
-
+                GUI.enabled = true;
                 var setMethod = showEntity.SetMethod;
                 if (setMethod == null)
                 {

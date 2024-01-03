@@ -739,13 +739,14 @@ namespace GMToolKit.Inspector
 
                     EditorGUILayout.BeginVertical();
 
-                    GUI.enabled = IsKeyTypeChangeable(keyType);
+                    bool privoursEnable = GUI.enabled;
+                    GUI.enabled = IsKeyTypeChangeable(keyType) && privoursEnable;
                     DrawField("Key", keyType, key, paramCacheKey + index + "Key", out bool c2);
                     if (c2)
                     {
                         changed = true;
                     }
-                    GUI.enabled = true;
+                    GUI.enabled = privoursEnable;
                     // EditorGUILayout.EndVertical();
 
                     // DrawVerticalLine(Color.gray);
@@ -850,7 +851,12 @@ namespace GMToolKit.Inspector
                 var showFieldList = InspectorReflectionUtil.GetFields(oldValue.GetType());
                 foreach (var showEntity in showFieldList)
                 {
-                    var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                    var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, oldValue);
+                    if (!needInspect)
+                    {
+                        continue;
+                    }
+                    var inspectAttr = showEntity.GetCustomAttribute<InspectAttribute>();
                     if (inspectAttr == null && showEntity.IsPrivate)
                     {
                         continue;
@@ -869,7 +875,12 @@ namespace GMToolKit.Inspector
                 var showPropertyList = InspectorReflectionUtil.GetProperties(oldValue.GetType());
                 foreach (var showEntity in showPropertyList)
                 {
-                    var inspectAttr = showEntity.GetCustomAttribute<Inspect>();
+                    var needInspect = InspectorIfUtil.CheckInspectIf(showEntity, oldValue);
+                    if (!needInspect)
+                    {
+                        continue;
+                    }
+                    var inspectAttr = showEntity.GetCustomAttribute<InspectAttribute>();
                     if (inspectAttr == null && showEntity.GetMethod != null && showEntity.GetMethod.IsPrivate)
                     {
                         continue;

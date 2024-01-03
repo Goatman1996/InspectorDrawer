@@ -5,7 +5,7 @@ namespace GMToolKit.Inspector
 {
     public class InspectorIfUtil
     {
-        private static bool CheckInspectIf(InspectIf inspectIFAttr, object mono)
+        private static bool CheckInspectIf(InspectIfAttribute inspectIFAttr, object mono)
         {
             var bindingAttr = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
             var condition = inspectIFAttr.condition;
@@ -69,13 +69,13 @@ namespace GMToolKit.Inspector
 
         public static bool CheckInspectIf(FieldInfo field, object mono)
         {
-            var inspectAttr = field.GetCustomAttribute<Inspect>();
+            var inspectAttr = field.GetCustomAttribute<InspectAttribute>();
             if (inspectAttr == null)
             {
                 return false;
             }
 
-            var inspectIFAttr = field.GetCustomAttribute<InspectIf>();
+            var inspectIFAttr = field.GetCustomAttribute<InspectIfAttribute>();
             if (inspectIFAttr == null)
             {
                 return true;
@@ -86,13 +86,13 @@ namespace GMToolKit.Inspector
 
         public static bool CheckInspectIf(PropertyInfo propertyInfo, object mono)
         {
-            var inspectAttr = propertyInfo.GetCustomAttribute<Inspect>();
+            var inspectAttr = propertyInfo.GetCustomAttribute<InspectAttribute>();
             if (inspectAttr == null)
             {
                 return false;
             }
 
-            var inspectIFAttr = propertyInfo.GetCustomAttribute<InspectIf>();
+            var inspectIFAttr = propertyInfo.GetCustomAttribute<InspectIfAttribute>();
             if (inspectIFAttr == null)
             {
                 return true;

@@ -21,7 +21,6 @@ namespace GMToolKit.Inspector
     {
         public string showingName = null;
         public bool isReadOnly;
-        public int color;
 
         public InspectAttribute() { }
 

@@ -902,7 +902,15 @@ namespace GMToolKit.Inspector
                     }
                     if (c2)
                     {
-                        setMethod.Invoke(oldValue, new object[] { newProperty });
+                        changed = true;
+                        if (setMethod.IsStatic)
+                        {
+                            setMethod.Invoke(null, new object[] { newProperty });
+                        }
+                        else
+                        {
+                            setMethod.Invoke(oldValue, new object[] { newProperty });
+                        }
                     }
                 }
 

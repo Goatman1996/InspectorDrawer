@@ -9,7 +9,9 @@
 
 包括任何自定义的类以及字典
 
-### 2： GMToolKit.Inspector.Sectionary<KeyT, ValueT>
-支持MonoBehaviour上可序列化的字典
-GMToolKit.Inspector.Sectionary<KeyT, ValueT>
+### 2： [GMToolKit.Inspector.Button]
+在方法上，使用[GMToolKit.Inspector.Button]标签
+
+可在Inspector上添加该方法的调起按钮
+
 

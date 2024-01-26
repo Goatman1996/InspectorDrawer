@@ -66,6 +66,7 @@ namespace GMToolKit.Inspector
             else if (type == typeof(string)) return DrawString(name, oldValue, out changed);
             else if (type == typeof(float)) return DrawFloat(name, oldValue, out changed);
             else if (type == typeof(double)) return DrawDouble(name, oldValue, out changed);
+            else if (type == typeof(decimal)) return DrawDecimal(name, oldValue, out changed);
             else if (type.IsEnum) return DrawEnum(name, type, oldValue, out changed);
 
             else if (typeof(UnityEngine.Object).IsAssignableFrom(type)) return DrawUnityObject(name, type, oldValue, out changed);
@@ -188,6 +189,16 @@ namespace GMToolKit.Inspector
             var newValue = EditorGUILayout.DoubleField(content, (double)oldValue);
             changed = newValue != (double)oldValue;
             return newValue;
+        }
+
+        public static decimal DrawDecimal(string name, object oldValue, out bool changed)
+        {
+            if (oldValue == null) oldValue = 0;
+            var content = new GUIContent(name);
+            var d = (decimal)oldValue;
+            var newValue = EditorGUILayout.DoubleField(content, (double)d);
+            changed = (decimal)newValue != (decimal)oldValue;
+            return (decimal)newValue;
         }
 
         public static Enum DrawEnum(string name, Type type, object oldValue, out bool changed)

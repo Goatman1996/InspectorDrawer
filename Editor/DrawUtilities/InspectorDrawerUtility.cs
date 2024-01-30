@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace GMToolKit.Inspector
 {
@@ -26,18 +27,6 @@ namespace GMToolKit.Inspector
             line.margin = new RectOffset(0, 0, 3, 3);
             line.fixedHeight = 1;
             GUILayout.Box(GUIContent.none, line);
-            GUI.color = colorTemp;
-        }
-
-        public static void DrawVerticalLine(UnityEngine.Color color)
-        {
-            var colorTemp = GUI.color;
-            GUI.color = color;
-            GUIStyle line = new GUIStyle();
-            line.normal.background = EditorGUIUtility.whiteTexture;
-            line.margin = new RectOffset(0, 0, 3, 3);
-            line.fixedHeight = 1;
-            GUILayout.Box(GUIContent.none, line, GUILayout.ExpandHeight(true));
             GUI.color = colorTemp;
         }
 
@@ -945,17 +934,15 @@ namespace GMToolKit.Inspector
                 var index = EditorGUILayout.Popup(name, 0, new string[] { "Null", type.Name });
                 if (index != 0)
                 {
-                    var constrcutorArray = type.GetConstructors();
-                    foreach (var constrcutor in constrcutorArray)
+
+                    var defaultConstructor = type.GetConstructor(new Type[0]);
+                    if (defaultConstructor != null)
                     {
-                        if (constrcutor.GetParameters().Length == 0)
-                        {
-                            ret = Activator.CreateInstance(type);
-                        }
-                        if (constrcutor.GetParameters().Length == 1 && constrcutor.GetParameters()[0].ParameterType == typeof(int))
-                        {
-                            ret = Activator.CreateInstance(type, 0);
-                        }
+                        ret = Activator.CreateInstance(type);
+                    }
+                    else
+                    {
+                        ret = FormatterServices.GetUninitializedObject(type);
                     }
 
                     changed = true;

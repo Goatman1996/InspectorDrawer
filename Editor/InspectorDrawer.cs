@@ -1,14 +1,76 @@
 using UnityEditor;
 using UnityEngine;
 using System.Reflection;
+using UnityEngine.UIElements;
+using UnityEditorInternal;
+using System.Collections.Generic;
+using UnityEditor.UIElements;
+using System;
 
 namespace GMToolKit.Inspector
 {
-    [CustomEditor(typeof(MonoBehaviour), true)]
-    public class MonoBehaviourDrawer : InspectorDrawer { }
+    // [CustomEditor(typeof(MonoBehaviour), true)]
+    // public class MonoBehaviourDrawer : InspectorDrawer { }
 
-    [CustomEditor(typeof(ScriptableObject), true)]
-    public class ScriptableObjectDrawer : InspectorDrawer { }
+    // [CustomEditor(typeof(ScriptableObject), true)]
+    // public class ScriptableObjectDrawer : InspectorDrawer { }
+
+    [CustomEditor(typeof(MonoBehaviour), true)]
+    public class InspectorDrawerElement : UnityEditor.Editor
+    {
+        private DrawerManifest manifest;
+        private VisualElement root;
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            root = new VisualElement();
+            this.AddScriptViewToRoot(root);
+
+            var imgui = new IMGUIContainer();
+            imgui.onGUIHandler += this.Tick;
+            root.Add(imgui);
+
+            this.manifest = DrawerManifest.CreateManifest(this.target);
+            foreach (var entry in manifest.entryList)
+            {
+                entry.drawer.Entry = entry;
+                root.Add(entry.drawer.Initialize());
+            }
+
+            return root;
+        }
+
+        private void AddScriptViewToRoot(VisualElement root)
+        {
+            var serializedObj = new SerializedObject(this.target);
+            var scriptField = new ObjectField();
+            scriptField.label = "Script";
+            scriptField.objectType = typeof(MonoBehaviour);
+            var property = serializedObj.FindProperty("m_Script");
+            scriptField.value = property.objectReferenceValue;
+
+            root.Add(scriptField);
+
+            scriptField.AddToClassList("unity-disabled");
+            var selector = scriptField.Q(null, "unity-object-field__selector");
+            selector.SetEnabled(false);
+
+        }
+
+        private void Tick()
+        {
+            var seObj = new SerializedObject(this.target);
+
+            bool isDirty = false;
+            foreach (var entry in this.manifest.entryList)
+            {
+                entry.drawer.Tick();
+                if (entry.isDirty) isDirty = true;
+                entry.isDirty = false;
+            }
+            if (isDirty) EditorUtility.SetDirty(this.target);
+        }
+    }
 
     public abstract class InspectorDrawer : UnityEditor.Editor
     {

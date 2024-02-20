@@ -6,10 +6,12 @@ namespace GMToolKit.Inspector
     public class DrawerAttribute : Attribute
     {
         public Type type;
+        public Type special;
 
-        public DrawerAttribute(Type type)
+        public DrawerAttribute(Type type, Type specialDrawer = null)
         {
             this.type = type;
+            this.special = specialDrawer;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GMToolKit.Inspector
             view.RegisterValueChangedCallback((e) =>
             {
                 var newValue = e.newValue;
-                var undoCommand = new BoolUndoCommand
+                var undoCommand = new UndoCommand
                 {
                     Do = () => this.Entry.Value = newValue,
                     Undo = () => this.Entry.Value = !newValue,
@@ -38,12 +38,6 @@ namespace GMToolKit.Inspector
             {
                 this.view.SetValueWithoutNotify(sourceValue);
             }
-        }
-
-        private class BoolUndoCommand : UndoSystem.IUndoCommand
-        {
-            public Action Do { get; set; }
-            public Action Undo { get; set; }
         }
     }
 }

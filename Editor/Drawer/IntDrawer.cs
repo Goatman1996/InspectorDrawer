@@ -9,14 +9,11 @@ namespace GMToolKit.Inspector
     internal class IntDrawer : Drawer
     {
         IntegerField view;
-        private bool dragging;
-        private bool editing;
         private int previousValue;
 
         public override VisualElement Initialize()
         {
-            view = new IntegerField();
-            view.label = this.Entry.memberInfo.Name;
+            view = new IntegerField(this.Entry.memberInfo.Name);
 
             view.RegisterValueChangedCallback((e) =>
             {
@@ -39,18 +36,16 @@ namespace GMToolKit.Inspector
             var newValue = this.view.value;
             var previous = previousValue;
 
-            var undoCommand = new IntUndoCommand()
+            var undoCommand = new UndoCommand()
             {
                 Do = () => { this.Entry.Value = newValue; },
                 Undo = () => { this.Entry.Value = previous; }
             };
             UndoSystem.UndoSystem.Record(undoCommand);
-            editing = false;
         }
 
         private void OnFocusIn(FocusInEvent evt)
         {
-            editing = true;
             previousValue = this.view.value;
         }
 
@@ -59,19 +54,17 @@ namespace GMToolKit.Inspector
             var newValue = this.view.value;
             var previous = previousValue;
 
-            var undoCommand = new IntUndoCommand()
+            var undoCommand = new UndoCommand()
             {
                 Do = () => { this.Entry.Value = newValue; },
                 Undo = () => { this.Entry.Value = previous; }
             };
 
             UndoSystem.UndoSystem.Record(undoCommand);
-            dragging = false;
         }
 
         private void OnDrag(MouseDownEvent evt)
         {
-            dragging = true;
             previousValue = this.view.value;
         }
 
@@ -82,12 +75,6 @@ namespace GMToolKit.Inspector
             {
                 this.view.SetValueWithoutNotify(sourceValue);
             }
-        }
-
-        private class IntUndoCommand : IUndoCommand
-        {
-            public Action Undo { get; set; }
-            public Action Do { get; set; }
         }
     }
 }

@@ -78,12 +78,12 @@ namespace GMToolKit.Inspector
 
         private static bool IsVisibleField(FieldInfo fieldInfo)
         {
-            return DrawerUtil.CanDrawerType(fieldInfo.FieldType);
+            return DrawerProvider.CanDrawerType(fieldInfo.FieldType);
         }
 
         private static bool IsVisibleProperty(PropertyInfo propertyInfo)
         {
-            return DrawerUtil.CanDrawerType(propertyInfo.PropertyType);
+            return DrawerProvider.CanDrawerType(propertyInfo.PropertyType);
         }
 
         public static HashSet<Type> DefaultVisibleTypes = new HashSet<Type>

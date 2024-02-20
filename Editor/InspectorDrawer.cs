@@ -15,7 +15,7 @@ namespace GMToolKit.Inspector
     // [CustomEditor(typeof(ScriptableObject), true)]
     // public class ScriptableObjectDrawer : InspectorDrawer { }
 
-    [CustomEditor(typeof(MonoBehaviour), true)]
+    // [CustomEditor(typeof(MonoBehaviour), true)]
     public class InspectorDrawerElement : UnityEditor.Editor
     {
         private DrawerManifest manifest;
@@ -59,8 +59,6 @@ namespace GMToolKit.Inspector
 
         private void Tick()
         {
-            var seObj = new SerializedObject(this.target);
-
             bool isDirty = false;
             foreach (var entry in this.manifest.entryList)
             {

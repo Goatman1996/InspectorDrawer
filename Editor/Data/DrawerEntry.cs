@@ -32,7 +32,7 @@ namespace GMToolKit.Inspector
                 drawerEntry.instance = instance;
             }
 
-            drawerEntry.drawer = DrawerUtil.CreateDrawer(drawerEntry.type);
+            drawerEntry.drawer = DrawerProvider.CreateDrawer(drawerEntry.memberInfo, drawerEntry.type);
 
             return drawerEntry;
         }

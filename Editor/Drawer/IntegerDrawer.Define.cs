@@ -52,5 +52,23 @@ namespace GMToolKit.Inspector
         protected override bool Equals(byte left, byte right) => left == right;
     }
 
+    [Drawer(typeof(sbyte))]
+    internal class SByteDrawer : IntegerDrawer<sbyte>
+    {
+        protected override sbyte MinValue => sbyte.MinValue;
+        protected override sbyte MaxValue => sbyte.MaxValue;
+        protected override BigInteger Convertor(sbyte v) => v;
+        protected override sbyte Convertor(BigInteger v) => (sbyte)v;
+        protected override bool Equals(sbyte left, sbyte right) => left == right;
+    }
 
+    [Drawer(typeof(short))]
+    internal class ShortDrawer : IntegerDrawer<short>
+    {
+        protected override short MinValue => short.MinValue;
+        protected override short MaxValue => short.MaxValue;
+        protected override BigInteger Convertor(short v) => v;
+        protected override short Convertor(BigInteger v) => (short)v;
+        protected override bool Equals(short left, short right) => left == right;
+    }
 }

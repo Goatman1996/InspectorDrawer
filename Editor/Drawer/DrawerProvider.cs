@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Policy;
 using Codice.Client.BaseCommands;
+using UnityEngine;
 
 namespace GMToolKit.Inspector
 {
@@ -66,7 +67,7 @@ namespace GMToolKit.Inspector
                     if (!type.IsSubclassOf(typeof(Drawer))) continue;
 
                     var drawerAttribute = type.GetCustomAttribute<DrawerAttribute>();
-                    if (drawerAttribute == null) return;
+                    if (drawerAttribute == null) continue;
 
                     var drawerType = type;
                     var visibleType = drawerAttribute.type;

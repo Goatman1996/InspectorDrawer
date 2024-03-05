@@ -69,7 +69,7 @@ namespace GMToolKit.Inspector
 
         protected override BigInteger StringToValue(string str)
         {
-            if (ExpressionEvaluatorWithRPN.EvaluateInteger(str, out BigInteger result))
+            if (IntegerExpressionEvaluator.EvaluateInteger(str, out BigInteger result))
             {
                 result = GetClampedValue(result);
                 return result;
@@ -141,7 +141,7 @@ namespace GMToolKit.Inspector
 
             protected override BigInteger StringToValue(string str)
             {
-                if (ExpressionEvaluatorWithRPN.EvaluateInteger(str, out BigInteger result))
+                if (IntegerExpressionEvaluator.EvaluateInteger(str, out BigInteger result))
                 {
                     result = this.parentField.GetClampedValue(result);
                     return result;

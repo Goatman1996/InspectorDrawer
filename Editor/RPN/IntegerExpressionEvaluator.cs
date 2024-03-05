@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GMToolKit
 {
-    public class ExpressionEvaluatorWithRPN
+    public class IntegerExpressionEvaluator
     {
         private enum Associativity { Left, Right }
         private struct Operator
@@ -26,35 +26,24 @@ namespace GMToolKit
 
 
         private static Dictionary<char, Operator> validOperator = new Dictionary<char, Operator>()
-    {
-        {'+', new Operator('+',1,2,Associativity.Left)},
-        {'-', new Operator('-',1,2,Associativity.Left)},
-        {'*', new Operator('*',2,2,Associativity.Left)},
-        {'/', new Operator('/',2,2,Associativity.Left)},
-        {'%', new Operator('%',2,2,Associativity.Left)},
-        {'^', new Operator('^',3,2,Associativity.Right)},
-        {'u', new Operator('u',4,1,Associativity.Left)},
-    };
-
-        private static HashSet<char> numericCharacter = new HashSet<char>()
-    {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'
-    };
+        {
+            {'+', new Operator('+',1,2,Associativity.Left)},
+            {'-', new Operator('-',1,2,Associativity.Left)},
+            {'*', new Operator('*',2,2,Associativity.Left)},
+            {'/', new Operator('/',2,2,Associativity.Left)},
+            {'%', new Operator('%',2,2,Associativity.Left)},
+            {'^', new Operator('^',3,2,Associativity.Right)},
+            {'u', new Operator('u',4,1,Associativity.Left)},
+        };
 
         public static bool EvaluateInteger(string expression, out BigInteger result)
         {
             expression = TrimExpression(expression);
-
             var tokens = Tokenize(expression);
-
             FixMinusOperators(tokens);
-
-
-
             var rpnTokens = ConvertToRPN(tokens);
 
             return EvaluateBigInteger(rpnTokens, out result);
-
         }
 
         private static bool EvaluateBigInteger(string[] tokens, out BigInteger value)
@@ -109,7 +98,7 @@ namespace GMToolKit
             bool success = false;
             result = default;
             BigInteger temp = default;
-            success = BigInteger.TryParse(expression, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out temp);
+            success = BigInteger.TryParse(expression, NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat, out temp);
             result = temp;
             return success;
         }
@@ -294,10 +283,5 @@ namespace GMToolKit
         {
             return validOperator.ContainsKey(c);
         }
-
-        // public static bool EvaluateDouble(string expression, out double result)
-        // {
-
-        // }
     }
 }

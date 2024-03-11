@@ -15,7 +15,7 @@ namespace GMToolKit.Inspector
 
             view.RegisterValueChangedCallback(e =>
             {
-                this.Entry.Value = view.value;
+                this.Entry.Value = e.newValue;
             });
 
             view.SetEnabled(this.Entry.IsSettable());

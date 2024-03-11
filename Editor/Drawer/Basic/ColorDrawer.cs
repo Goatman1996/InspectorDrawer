@@ -17,7 +17,7 @@ namespace GMToolKit.Inspector
             view = new ColorField(this.Entry.memberInfo.Name);
             previousValue = (Color)this.Entry.Value;
 
-            view.RegisterCallback<ChangeEvent<Color>>(e =>
+            view.RegisterValueChangedCallback(e =>
             {
                 var prevous = previousValue;
                 var newValue = e.newValue;

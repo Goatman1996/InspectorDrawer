@@ -22,7 +22,7 @@ namespace GMToolKit.Inspector
                 var prevous = previousValue;
                 var newValue = e.newValue;
 
-                this.Entry.Value = e.newValue;
+                this.Entry.Value = newValue;
                 var undoCommand = new UndoCommand()
                 {
                     Do = () => { this.Entry.Value = newValue; },
@@ -39,6 +39,47 @@ namespace GMToolKit.Inspector
         public override void Tick()
         {
             var sourceValue = (Color)this.Entry.Value;
+            var textValue = this.view.value;
+
+            if (sourceValue != textValue)
+            {
+                this.view.SetValueWithoutNotify(sourceValue);
+            }
+        }
+    }
+
+    [Drawer(typeof(Color32))]
+    internal class Color32Drawer : Drawer
+    {
+        ColorField view;
+        Color32 previousValue;
+        public override VisualElement Initialize()
+        {
+            view = new ColorField(this.Entry.memberInfo.Name);
+            previousValue = (Color32)this.Entry.Value;
+
+            view.RegisterValueChangedCallback(e =>
+            {
+                Color32 prevous = previousValue;
+                Color32 newValue = e.newValue;
+
+                this.Entry.Value = newValue;
+                var undoCommand = new UndoCommand()
+                {
+                    Do = () => { this.Entry.Value = newValue; },
+                    Undo = () => { this.Entry.Value = prevous; }
+                };
+                UndoSystem.UndoSystem.Record(undoCommand);
+
+                previousValue = newValue;
+            });
+
+            return view;
+        }
+
+        public override void Tick()
+        {
+            var sourceValue = (Color32)this.Entry.Value;
             var textValue = this.view.value;
 
             if (sourceValue != textValue)

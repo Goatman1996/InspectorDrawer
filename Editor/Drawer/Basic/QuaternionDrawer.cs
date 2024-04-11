@@ -38,7 +38,6 @@ namespace GMToolKit.Inspector
             var sourceValue = (Quaternion)this.Entry.Value;
             var textValue = Convertor(this.view.value);
 
-            Debug.Log($"{sourceValue} & {textValue} = {sourceValue == textValue}");
             // if (sourceValue != textValue)
             if (!CustomEquals(sourceValue, textValue))
             {

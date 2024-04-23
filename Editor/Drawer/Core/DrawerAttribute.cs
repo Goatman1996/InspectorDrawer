@@ -7,6 +7,7 @@ namespace GMToolKit.Inspector
     {
         public Type type;
         public Type special;
+        public bool inherited = false;
 
         public DrawerAttribute(Type type, Type specialDrawer = null)
         {

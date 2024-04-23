@@ -14,6 +14,7 @@ namespace GMToolKit.Inspector
             private Type visibleType;
             private Dictionary<Type, Type> specialDrawerDic;
             private Type defaultDrawerType;
+            public bool inherited { get; private set; }
 
             public Provider(Type visibleType)
             {
@@ -32,6 +33,8 @@ namespace GMToolKit.Inspector
                 {
                     specialDrawerDic.Add(drawerAttribute.special, drawerType);
                 }
+
+                this.inherited = drawerAttribute.inherited;
             }
 
             public Type GetDrawerType(MemberInfo memberInfo)
@@ -51,12 +54,19 @@ namespace GMToolKit.Inspector
 
                 return this.defaultDrawerType;
             }
+
+            public bool IsInherited(Type type)
+            {
+                return this.visibleType.IsAssignableFrom(type);
+            }
         }
 
         private static Dictionary<Type, Provider> drawerProviderDic;
+        private static HashSet<Provider> inheritedProviderList;
 
         private static void Initialize()
         {
+            inheritedProviderList = new HashSet<Provider>();
             drawerProviderDic = new Dictionary<Type, Provider>();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
@@ -74,10 +84,16 @@ namespace GMToolKit.Inspector
                     if (!drawerProviderDic.ContainsKey(visibleType))
                     {
                         // 显示类型，绘制器类型
-                        drawerProviderDic.Add(visibleType, new Provider(visibleType));
+                        var newProvider = new Provider(visibleType);
+                        drawerProviderDic.Add(visibleType, newProvider);
+
                     }
                     var provider = drawerProviderDic[visibleType];
                     provider.Add(drawerType);
+                    if (provider.inherited)
+                    {
+                        inheritedProviderList.Add(provider);
+                    }
                 }
             }
         }
@@ -97,6 +113,17 @@ namespace GMToolKit.Inspector
                 return drawer;
             }
 
+            foreach (var inheritedProvider in inheritedProviderList)
+            {
+                var IsInherited = inheritedProvider.IsInherited(visibleType);
+                if (IsInherited)
+                {
+                    var drawerType = inheritedProvider.GetDrawerType(memberInfo);
+                    var drawer = (Drawer)ReflectionUtil.CreateInstance(drawerType);
+                    return drawer;
+                }
+            }
+
             return null;
         }
 
@@ -107,7 +134,20 @@ namespace GMToolKit.Inspector
                 Initialize();
             }
 
-            return drawerProviderDic.ContainsKey(type);
+            var hasDrawer = drawerProviderDic.ContainsKey(type);
+            var hasInheritedDrawer = false;
+
+            foreach (var inheritedProvider in inheritedProviderList)
+            {
+                var IsInherited = inheritedProvider.IsInherited(type);
+                if (IsInherited)
+                {
+                    hasInheritedDrawer = true;
+                    break;
+                }
+            }
+
+            return hasDrawer || hasInheritedDrawer;
         }
     }
 }

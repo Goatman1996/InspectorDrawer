@@ -26,7 +26,7 @@ namespace GMToolKit.Inspector
 
         private static BindingFlags DefaultBindingFlags =>
             BindingFlags.Public |
-            // BindingFlags.NonPublic |
+            BindingFlags.NonPublic |
             BindingFlags.Instance |
             BindingFlags.Static |
             BindingFlags.DeclaredOnly;
@@ -78,6 +78,12 @@ namespace GMToolKit.Inspector
 
         private static bool IsVisibleField(FieldInfo fieldInfo)
         {
+            if (!fieldInfo.IsPublic)
+            {
+                var inspectAttr = fieldInfo.GetCustomAttribute<InspectAttribute>();
+                var serializeFieldAttr = fieldInfo.GetCustomAttribute<UnityEngine.SerializeField>();
+                if (inspectAttr == null && serializeFieldAttr == null) return false;
+            }
             return DrawerProvider.CanDrawerType(fieldInfo.FieldType);
         }
 
@@ -89,17 +95,21 @@ namespace GMToolKit.Inspector
         public static HashSet<Type> DefaultVisibleTypes = new HashSet<Type>
         {
             typeof(bool),
+            typeof(byte),
+            typeof(sbyte),
             typeof(int),
             typeof(uint),
+            typeof(short),
             typeof(long),
             typeof(ulong),
+
             typeof(float),
             typeof(double),
 
             typeof(Color),
             typeof(Color32),
-            typeof(AnimationCurve),
             typeof(Gradient),
+            typeof(Quaternion),
 
             typeof(Vector2),
             typeof(Vector2Int),
@@ -110,6 +120,10 @@ namespace GMToolKit.Inspector
             typeof(RectInt),
             typeof(Bounds),
             typeof(BoundsInt),
+
+            typeof(AnimationCurve),
+
+            typeof(UnityEngine.Object),
         };
     }
 }

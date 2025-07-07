@@ -17,10 +17,10 @@ namespace GMToolKit.Inspector
 
         public override VisualElement Initialize()
         {
-            var rangeAttr = this.Entry.memberInfo.GetCustomAttribute<RangeAttribute>();
+            var rangeAttr = this.Entry.GetEntryAttribute<RangeAttribute>();
             this.min = Mathf.CeilToInt(rangeAttr.min);
             this.max = Mathf.FloorToInt(rangeAttr.max);
-            view = new SliderInt(this.Entry.memberInfo.Name, min, max);
+            view = new SliderInt(this.Entry.EntryName, min, max);
 
             view.RegisterValueChangedCallback((e) =>
             {

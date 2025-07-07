@@ -19,7 +19,7 @@ namespace GMToolKit.Inspector
         {
             var min = Convertor(MinValue);
             var max = Convertor(MaxValue);
-            this.view = new BigIntegerField(this.Entry.memberInfo.Name, min, max);
+            this.view = new BigIntegerField(this.Entry.EntryName, min, max);
 
             view.RegisterValueChangedCallback(e =>
             {

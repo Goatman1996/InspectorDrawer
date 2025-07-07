@@ -10,7 +10,7 @@ namespace GMToolKit.Inspector
         CurveField view;
         public override VisualElement Initialize()
         {
-            view = new CurveField(this.Entry.memberInfo.Name);
+            view = new CurveField(this.Entry.EntryName);
             view.RegisterValueChangedCallback(e =>
             {
                 this.Entry.Value = e.newValue;
@@ -25,7 +25,6 @@ namespace GMToolKit.Inspector
             var textValue = this.view.value;
             if (!sourceValue.Equals(textValue))
             {
-                Debug.Log("2");
                 this.view.SetValueWithoutNotify(sourceValue);
             }
         }

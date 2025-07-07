@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         FloatNumberField view;
         public override VisualElement Initialize()
         {
-            view = new FloatNumberField(this.Entry.memberInfo.Name);
+            view = new FloatNumberField(this.Entry.EntryName);
 
             view.RegisterValueChangedCallback(e =>
             {

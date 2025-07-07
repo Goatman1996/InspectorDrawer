@@ -10,9 +10,9 @@ namespace GMToolKit.Inspector
         ObjectField view;
         public override VisualElement Initialize()
         {
-            view = new ObjectField(this.Entry.memberInfo.Name);
+            view = new ObjectField(this.Entry.EntryName);
             view.allowSceneObjects = true;
-            view.objectType = this.Entry.type;
+            view.objectType = this.Entry.EntryType;
             view.RegisterValueChangedCallback(e =>
             {
                 this.Entry.Value = e.newValue;

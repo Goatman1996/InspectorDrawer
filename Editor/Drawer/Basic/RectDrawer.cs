@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         Rect previousValue;
         public override VisualElement Initialize()
         {
-            view = new RectField(this.Entry.memberInfo.Name);
+            view = new RectField(this.Entry.EntryName);
 
             previousValue = (Rect)this.Entry.Value;
 

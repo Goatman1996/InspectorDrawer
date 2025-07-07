@@ -15,7 +15,7 @@ namespace GMToolKit.Inspector
     // [CustomEditor(typeof(ScriptableObject), true)]
     // public class ScriptableObjectDrawer : InspectorDrawer { }
 
-    [CustomEditor(typeof(MonoBehaviour), true)]
+    // [CustomEditor(typeof(MonoBehaviour), true)]
     public class InspectorDrawerElement : UnityEditor.Editor
     {
         private DrawerManifest manifest;

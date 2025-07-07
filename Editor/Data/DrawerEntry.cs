@@ -1,24 +1,20 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
 namespace GMToolKit.Inspector
 {
-    internal class DrawerEntry
+    internal sealed class DrawerEntry : IDrawerEntry
     {
-        public bool serializable;
-        public int depth;
-        public List<DrawerEntry> children;
         public Drawer drawer;
-        public Type type;
+        public Type EntryType { get; private set; }
         public bool isDirty;
-
         public MemberInfo memberInfo;
-        public object instance;
+        public string EntryName { get => this.memberInfo.Name; }
 
-        public bool IsStatic { get; private set; }
+        private object instance;
+        private bool IsStatic { get; set; }
 
         private DrawerEntry() { }
 
@@ -27,13 +23,13 @@ namespace GMToolKit.Inspector
             var drawerEntry = new DrawerEntry();
             drawerEntry.memberInfo = memberInfo;
             drawerEntry.IsStatic = MemberUtil.IsMemberStatic(memberInfo);
-            drawerEntry.type = MemberUtil.GetMemberValueType(memberInfo);
+            drawerEntry.EntryType = MemberUtil.GetMemberValueType(memberInfo);
             if (!drawerEntry.IsStatic)
             {
                 drawerEntry.instance = instance;
             }
 
-            drawerEntry.drawer = DrawerProvider.CreateDrawer(drawerEntry.memberInfo, drawerEntry.type);
+            drawerEntry.drawer = DrawerProvider.CreateDrawer(drawerEntry.memberInfo, drawerEntry.EntryType);
 
             return drawerEntry;
         }
@@ -113,6 +109,11 @@ namespace GMToolKit.Inspector
             }
 
             return false;
+        }
+
+        public T GetEntryAttribute<T>() where T : Attribute
+        {
+            return this.memberInfo.GetCustomAttribute<T>();
         }
     }
 }

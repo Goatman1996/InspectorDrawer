@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         DoubleNumberField view;
         public override VisualElement Initialize()
         {
-            view = new DoubleNumberField(this.Entry.memberInfo.Name);
+            view = new DoubleNumberField(this.Entry.EntryName);
 
             view.RegisterValueChangedCallback(e =>
             {

@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         Vector3 previousValue;
         public override VisualElement Initialize()
         {
-            view = new Vector3Field(this.Entry.memberInfo.Name);
+            view = new Vector3Field(this.Entry.EntryName);
 
             previousValue = (Vector3)this.Entry.Value;
 

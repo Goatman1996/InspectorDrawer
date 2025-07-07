@@ -10,7 +10,7 @@ namespace GMToolKit.Inspector
         GradientField view;
         public override VisualElement Initialize()
         {
-            view = new GradientField(this.Entry.memberInfo.Name);
+            view = new GradientField(this.Entry.EntryName);
             view.value = (Gradient)this.Entry.Value;
             view.RegisterValueChangedCallback(e =>
             {
@@ -26,7 +26,6 @@ namespace GMToolKit.Inspector
             var textValue = this.view.value;
             if (!Compare(sourceValue, textValue))
             {
-                Debug.Log("1");
                 this.view.SetValueWithoutNotify(sourceValue);
             }
         }

@@ -14,7 +14,7 @@ namespace GMToolKit.Inspector
         Color previousValue;
         public override VisualElement Initialize()
         {
-            view = new ColorField(this.Entry.memberInfo.Name);
+            view = new ColorField(this.Entry.EntryName);
             previousValue = (Color)this.Entry.Value;
 
             view.RegisterValueChangedCallback(e =>
@@ -55,7 +55,7 @@ namespace GMToolKit.Inspector
         Color32 previousValue;
         public override VisualElement Initialize()
         {
-            view = new ColorField(this.Entry.memberInfo.Name);
+            view = new ColorField(this.Entry.EntryName);
             previousValue = (Color32)this.Entry.Value;
 
             view.RegisterValueChangedCallback(e =>

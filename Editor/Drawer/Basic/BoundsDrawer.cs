@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         Bounds previousValue;
         public override VisualElement Initialize()
         {
-            view = new BoundsField(this.Entry.memberInfo.Name);
+            view = new BoundsField(this.Entry.EntryName);
 
             previousValue = (Bounds)this.Entry.Value;
 

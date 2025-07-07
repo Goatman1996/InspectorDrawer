@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         DecimalNumberField view;
         public override VisualElement Initialize()
         {
-            view = new DecimalNumberField(this.Entry.memberInfo.Name);
+            view = new DecimalNumberField(this.Entry.EntryName);
 
             view.RegisterValueChangedCallback(e =>
             {

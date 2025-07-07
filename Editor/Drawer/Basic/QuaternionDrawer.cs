@@ -11,7 +11,7 @@ namespace GMToolKit.Inspector
         Quaternion previousValue;
         public override VisualElement Initialize()
         {
-            view = new Vector4Field(this.Entry.memberInfo.Name);
+            view = new Vector4Field(this.Entry.EntryName);
             previousValue = (Quaternion)this.Entry.Value;
 
             view.RegisterValueChangedCallback(e =>

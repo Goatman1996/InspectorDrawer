@@ -13,7 +13,7 @@ namespace GMToolKit.Inspector
         IListView view;
         public override VisualElement Initialize()
         {
-            view = new IListView(this.Entry.memberInfo.Name);
+            view = new IListView(this.Entry.EntryName);
             // view.itemsSource = (IList)this.Entry.Value;
             // view.makeItem += this.MakeItem;
             // view.bindItem += this.BindItem;
@@ -57,9 +57,31 @@ namespace GMToolKit.Inspector
 
         private class IListView : VisualElement
         {
+            List<IntegerField> list;
+            Foldout foldout;
             public IListView(string name)
             {
-                Add(new Label(name));
+                foldout = new Foldout();
+                foldout.text = name;
+                Add(foldout);
+                list = new List<IntegerField>()
+                {
+                    new IntegerField("a"),
+                    new IntegerField("b"),
+                    new IntegerField("c"),
+                };
+                Add(list[0]);
+                Add(list[1]);
+                Add(list[2]);
+
+                foldout.RegisterValueChangedCallback((e) =>
+                {
+                    foreach (var field in list)
+                    {
+                        // field.SetEnabled(e.newValue);
+                        field.style.display = e.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+                    }
+                });
             }
         }
     }

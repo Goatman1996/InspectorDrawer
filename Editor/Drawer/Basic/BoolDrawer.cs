@@ -13,7 +13,7 @@ namespace GMToolKit.Inspector
         public override VisualElement Initialize()
         {
             view = new Toggle();
-            view.label = this.Entry.memberInfo.Name;
+            view.label = this.Entry.EntryName;
             view.RegisterValueChangedCallback((e) =>
             {
                 var newValue = e.newValue;

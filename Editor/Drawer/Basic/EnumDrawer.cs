@@ -17,10 +17,10 @@ namespace GMToolKit.Inspector
         Enum previousValue;
         public override VisualElement Initialize()
         {
-            var flags = this.Entry.type.GetCustomAttribute<FlagsAttribute>();
+            var flags = this.Entry.EntryType.GetCustomAttribute<FlagsAttribute>();
             if (flags != null)
             {
-                enumFlagsField = new EnumFlagsField(this.Entry.memberInfo.Name);
+                enumFlagsField = new EnumFlagsField(this.Entry.EntryName);
                 enumFlagsField.Init((Enum)this.Entry.Value, true);
                 previousValue = (Enum)this.Entry.Value;
                 enumFlagsField.RegisterValueChangedCallback((e) =>
@@ -41,7 +41,7 @@ namespace GMToolKit.Inspector
             }
             else
             {
-                view = new EnumField(this.Entry.memberInfo.Name);
+                view = new EnumField(this.Entry.EntryName);
                 view.Init((Enum)this.Entry.Value, true);
                 previousValue = (Enum)this.Entry.Value;
                 view.RegisterValueChangedCallback((e) =>

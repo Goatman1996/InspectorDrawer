@@ -46,6 +46,10 @@ namespace GMToolKit.Inspector
                 EditorGUILayout.LabelField($"绘制深度不能超过7");
                 return null;
             }
+            if (type == typeof(object))
+            {
+                type = oldValue != null ? oldValue.GetType() : typeof(object);
+            }
 
             if (type == typeof(bool)) return DrawBool(name, oldValue, out changed);
             else if (type == typeof(int)) return DrawInt(name, oldValue, out changed);
